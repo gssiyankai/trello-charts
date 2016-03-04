@@ -4,6 +4,7 @@ import com.julienvey.trello.Trello;
 import com.julienvey.trello.impl.TrelloImpl;
 
 import java.io.IOException;
+import java.text.ParseException;
 
 import static com.gregory.Settings.settings;
 
@@ -18,27 +19,29 @@ public final class TrelloCharts {
     public Backlog backlog() throws IOException {
         return Backlog.builder()
                 .on(settings().trelloBoardId())
-                .from("Backlog")
+                .withListNamed("Backlog")
                 .with(trello)
                 .createBacklog();
     }
 
-    public Sprint sprint1() throws IOException {
+    public Sprint sprint1() throws IOException, ParseException {
         return Sprint.builder()
                 .of("Sprint 1")
                 .from("2016-02-08")
-                .to("2016-02-19")
+                .to("2016-02-21")
                 .on(settings().trelloBoardId())
+                .withCompletedListNamed("Done")
                 .with(trello)
                 .createSprint();
     }
 
-    public Sprint sprint2() throws IOException {
+    public Sprint sprint2() throws IOException, ParseException {
         return Sprint.builder()
                 .of("Sprint 2")
                 .from("2016-02-22")
-                .to("2016-03-04")
+                .to("2016-03-06")
                 .on(settings().trelloBoardId())
+                .withCompletedListNamed("Done")
                 .with(trello)
                 .createSprint();
     }

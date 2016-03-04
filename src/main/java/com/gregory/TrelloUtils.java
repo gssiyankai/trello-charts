@@ -1,11 +1,13 @@
 package com.gregory;
 
+import com.julienvey.trello.domain.Action;
 import com.julienvey.trello.domain.Card;
 import com.julienvey.trello.domain.Label;
 import com.julienvey.trello.domain.TList;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 
 public final class TrelloUtils {
 
@@ -57,6 +59,19 @@ public final class TrelloUtils {
 
     public static int extractCardPointsFromName(Card card) {
         return Integer.parseInt(card.getName().replaceFirst("\\((\\d+)\\).*", "$1"));
+    }
+
+    public static boolean isActionDoneWithin(Action action, Date start, Date end) {
+        Date actionDate = action.getDate();
+        return actionDate.compareTo(start) >= 0  && actionDate.compareTo(end) <= 0;
+    }
+
+    public static boolean isUpdateAction(Action action) {
+        return "updateCard".equals(action.getType());
+    }
+
+    public static boolean isMoveActionToList(Action action, String toList) {
+        return isUpdateAction(action) && toList.equals(action.getData().getListAfter().getName());
     }
 
 }

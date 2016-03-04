@@ -24,7 +24,7 @@ public final class Backlog {
     public Backlog printStats() {
         System.out.println("*-*-*-*-*-*-*-*-*-* Stats for backlog *-*-*-*-*-*-*-*-*-*");
         System.out.println("Number of points: " + numberOfPoints());
-        System.out.println("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
+        System.out.println("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
         return this;
     }
 
@@ -42,7 +42,7 @@ public final class Backlog {
             return this;
         }
 
-        public Builder from(String listName) {
+        public Builder withListNamed(String listName) {
             this.listName = listName;
             return this;
         }
