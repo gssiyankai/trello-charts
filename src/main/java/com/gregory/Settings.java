@@ -5,23 +5,18 @@ import java.util.Properties;
 
 public final class Settings {
 
-    private static final String SETTINGS_PROPERTIES = "settings.properties";
-    private static final String TRELLO_KEY = "trelloKey";
+    private static final String TRELLO_PROPERTIES = "trello.properties";
+    private static final String TRELLO_APPLICATION_KEY = "trelloApplicationKey";
     private static final String TRELLO_ACCESS_TOKEN = "trelloAccessToken";
     private static final String TRELLO_BOARD_ID = "trelloBoardId";
 
     private static Settings SINGLETON;
 
-    private final String trelloKey;
-    private final String trelloAccessToken;
-    private final String trelloBoardId;
+    private final Properties properties;
 
     private Settings() throws IOException {
-        Properties properties = new Properties();
-        properties.load(this.getClass().getResourceAsStream("/" + SETTINGS_PROPERTIES));
-        this.trelloKey = properties.getProperty(TRELLO_KEY);
-        this.trelloAccessToken = properties.getProperty(TRELLO_ACCESS_TOKEN);
-        this.trelloBoardId = properties.getProperty(TRELLO_BOARD_ID);
+        this.properties = new Properties();
+        this.properties.load(this.getClass().getResourceAsStream("/" + TRELLO_PROPERTIES));
     }
 
     public static Settings settings() {
@@ -35,16 +30,24 @@ public final class Settings {
         return SINGLETON;
     }
 
-    public String trelloKey() {
-        return trelloKey;
+    public String trelloApplicationKey() {
+        return property(TRELLO_APPLICATION_KEY);
     }
 
     public String trelloAccessToken() {
-        return trelloAccessToken;
+        return property(TRELLO_ACCESS_TOKEN);
     }
 
     public String trelloBoardId() {
-        return trelloBoardId;
+        return property(TRELLO_BOARD_ID);
+    }
+
+    private String property(String key) {
+        String property = properties.getProperty(key);
+        if (property == null || property.isEmpty()) {
+            throw new RuntimeException("Missing property " + key);
+        }
+        return property;
     }
 
 }

@@ -16,7 +16,7 @@ import static com.gregory.Settings.settings;
 
 public final class TrelloUtils {
 
-    private static final Trello TRELLO = new TrelloImpl(settings().trelloKey(), settings().trelloAccessToken());
+    private static final Trello TRELLO = new TrelloImpl(settings().trelloApplicationKey(), settings().trelloAccessToken());
     private static final List<TList> BOARD_LISTS = TRELLO.getBoardLists(settings().trelloBoardId());
     private static final List<Card> BOARD_CARDS = TRELLO.getBoardCards(settings().trelloBoardId());
 
@@ -32,7 +32,7 @@ public final class TrelloUtils {
         for (Card card : cards()) {
             for (Label label : card.getLabels()) {
                 String labelName = label.getName();
-                if (label != null && labelName.equals(name)) {
+                if (labelName != null && labelName.equals(name)) {
                     result.add(card);
                 }
             }
@@ -83,7 +83,7 @@ public final class TrelloUtils {
 
     public static boolean isActionDoneWithin(Action action, Date start, Date end) {
         Date actionDate = action.getDate();
-        return actionDate.compareTo(start) >= 0  && actionDate.compareTo(end) <= 0;
+        return actionDate.compareTo(start) >= 0 && actionDate.compareTo(end) <= 0;
     }
 
     public static boolean isUpdateAction(Action action) {
