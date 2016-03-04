@@ -24,9 +24,13 @@ public final class Settings {
         this.trelloBoardId = properties.getProperty(TRELLO_BOARD_ID);
     }
 
-    public static Settings settings() throws IOException {
+    public static Settings settings() {
         if (SINGLETON == null) {
-            SINGLETON = new Settings();
+            try {
+                SINGLETON = new Settings();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
         return SINGLETON;
     }

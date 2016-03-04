@@ -1,13 +1,11 @@
 package com.gregory;
 
-import com.julienvey.trello.Trello;
 import com.julienvey.trello.domain.Card;
-import com.julienvey.trello.domain.TList;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
-import static com.gregory.TrelloUtils.*;
+import static com.gregory.TrelloUtils.cardsByListName;
+import static com.gregory.TrelloUtils.cardsPoints;
 
 public final class Backlog {
 
@@ -28,34 +26,20 @@ public final class Backlog {
         return this;
     }
 
-    public static Builder builder(){
+    public static Builder builder() {
         return new Builder();
     }
 
     public static class Builder {
-        private String board;
         private String listName;
-        private Collection<Card> cards;
-
-        public Builder on(String board) {
-            this.board = board;
-            return this;
-        }
 
         public Builder withListNamed(String listName) {
             this.listName = listName;
             return this;
         }
 
-        public Builder with(Trello trello) {
-            this.cards = new ArrayList<>();
-            for (TList list : filterListsByName(trello.getBoardLists(board), listName)) {
-                this.cards.addAll(filterCardsByListId(trello.getBoardCards(board), list.getId()));
-            }
-            return this;
-        }
-
         public Backlog createBacklog() {
+            Collection<Card> cards = cardsByListName(listName);
             return new Backlog(cards);
         }
     }

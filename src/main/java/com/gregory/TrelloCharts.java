@@ -10,17 +10,9 @@ import static com.gregory.Settings.settings;
 
 public final class TrelloCharts {
 
-    private final Trello trello;
-
-    public TrelloCharts() throws IOException {
-        trello = new TrelloImpl(settings().trelloKey(), settings().trelloAccessToken());
-    }
-
     public Backlog backlog() throws IOException {
         return Backlog.builder()
-                .on(settings().trelloBoardId())
                 .withListNamed("Backlog")
-                .with(trello)
                 .createBacklog();
     }
 
@@ -29,9 +21,7 @@ public final class TrelloCharts {
                 .of("Sprint 1")
                 .from("2016-02-08")
                 .to("2016-02-21")
-                .on(settings().trelloBoardId())
                 .withCompletedListNamed("Done")
-                .with(trello)
                 .createSprint();
     }
 
@@ -40,9 +30,7 @@ public final class TrelloCharts {
                 .of("Sprint 2")
                 .from("2016-02-22")
                 .to("2016-03-06")
-                .on(settings().trelloBoardId())
                 .withCompletedListNamed("Done")
-                .with(trello)
                 .createSprint();
     }
 

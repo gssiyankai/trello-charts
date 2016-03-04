@@ -1,6 +1,5 @@
 package com.gregory;
 
-import com.julienvey.trello.Trello;
 import com.julienvey.trello.domain.Action;
 import com.julienvey.trello.domain.Card;
 
@@ -17,16 +16,14 @@ public final class Sprint {
     private final String name;
     private final Date startDate;
     private final Date endDate;
-    private final String completedListName;
-    private final String completedListId;
+    private final Collection<Card> completedCards;
     private final Collection<Card> cards;
 
-    private Sprint(String name, Date startDate, Date endDate, String completedListName, String completedListId, Collection<Card> cards) {
+    private Sprint(String name, Date startDate, Date endDate, Collection<Card> completedCards, Collection<Card> cards) {
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.completedListName = completedListName;
-        this.completedListId = completedListId;
+        this.completedCards = completedCards;
         this.cards = cards;
     }
 
@@ -39,16 +36,6 @@ public final class Sprint {
     }
 
     public int numberOfCompletedPoints() {
-        Collection<Card> completedCards = new ArrayList<>();
-        for (Card card : filterCardsByListId(cards, completedListId)) {
-            for (Action action : card.getActions()) {
-                if (isActionDoneWithin(action, startDate, endDate)
-                    && isMoveActionToList(action, completedListName)) {
-                    completedCards.add(card);
-                    break;
-                }
-            }
-        }
         return cardsPoints(completedCards);
     }
 
@@ -76,10 +63,7 @@ public final class Sprint {
         private String name;
         private Date startDate;
         private Date endDate;
-        private String board;
-        private String completedListName;
-        private String completedListId;
-        private Collection<Card> cards;
+        private String completedList;
 
         public Builder of(String name) {
             this.name = name;
@@ -96,25 +80,36 @@ public final class Sprint {
             return this;
         }
 
-        public Builder on(String board) {
-            this.board = board;
-            return this;
-        }
-
-        public Builder withCompletedListNamed(String completedListName) {
-            this.completedListName = completedListName;
-            return this;
-        }
-
-        public Builder with(Trello trello) {
-            this.completedListId = filterListsByName(trello.getBoardLists(board), completedListName).iterator().next().getId();
-            this.cards = filterCardsByLabelName(trello.getBoardCards(board), name);
+        public Builder withCompletedListNamed(String completedList) {
+            this.completedList = completedList;
             return this;
         }
 
         public Sprint createSprint() {
-            return new Sprint(name, startDate, endDate, completedListName, completedListId, cards);
+            return new Sprint(name, startDate, endDate, sprintCompletedCards(), sprintCards());
         }
+
+        private Collection<Card> sprintCards() {
+            return cardsByLabelName(name);
+        }
+
+        private Collection<Card> sprintCompletedCards() {
+            Collection<Card> completedCards = sprintCards();
+            completedCards.retainAll(cardsByListName(completedList));
+
+            Collection<Card> sprintCompletedCards = new ArrayList<>();
+            for (Card card : completedCards) {
+                for (Action action : card.getActions()) {
+                    if (isActionDoneWithin(action, startDate, endDate)
+                            && isMoveActionToList(action, completedList)) {
+                        sprintCompletedCards.add(card);
+                        break;
+                    }
+                }
+            }
+            return sprintCompletedCards;
+        }
+
     }
 
 }
