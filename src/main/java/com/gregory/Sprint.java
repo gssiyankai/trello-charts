@@ -13,6 +13,8 @@ import static com.gregory.TrelloUtils.*;
 
 public final class Sprint {
 
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+
     private final String name;
     private final Date startDate;
     private final Date endDate;
@@ -41,8 +43,8 @@ public final class Sprint {
 
     public Sprint printStats() {
         System.out.println(String.format("*-*-*-*-*-*-*-*-*-* Stats for %s *-*-*-*-*-*-*-*-*-*", name));
-        System.out.println("Start date : " + startDate);
-        System.out.println("End date : " + endDate);
+        System.out.println("Start date : " + DATE_FORMAT.format(startDate));
+        System.out.println("End date   : " + DATE_FORMAT.format(endDate));
         System.out.println("Number of cards: " + numberOfCards());
         System.out.println("Number of points: " + numberOfPoints());
         System.out.println("\tNumber of completed points: " + numberOfCompletedPoints());
@@ -71,12 +73,12 @@ public final class Sprint {
         }
 
         public Builder from(String startDate) throws ParseException {
-            this.startDate = new SimpleDateFormat("yyyy-MM-dd").parse(startDate);
+            this.startDate = DATE_FORMAT.parse(startDate);
             return this;
         }
 
         public Builder to(String endDate) throws ParseException {
-            this.endDate = new SimpleDateFormat("yyyy-MM-dd").parse(endDate);
+            this.endDate = DATE_FORMAT.parse(endDate);
             return this;
         }
 
