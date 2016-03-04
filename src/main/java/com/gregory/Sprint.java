@@ -2,10 +2,11 @@ package com.gregory;
 
 import com.julienvey.trello.Trello;
 import com.julienvey.trello.domain.Card;
-import com.julienvey.trello.domain.Label;
 
-import java.util.ArrayList;
 import java.util.Collection;
+
+import static com.gregory.TrelloUtils.extractCardPointsFromName;
+import static com.gregory.TrelloUtils.filterCardsByLabelName;
 
 public final class Sprint {
 
@@ -28,8 +29,7 @@ public final class Sprint {
     public int numberOfPoints() {
         int points = 0;
         for (Card card : cards) {
-            int cardPoints = Integer.parseInt(card.getName().replaceFirst("\\((\\d+)\\).*", "$1"));
-            points += cardPoints;
+            points += extractCardPointsFromName(card);
         }
         return points;
     }
@@ -80,16 +80,7 @@ public final class Sprint {
         }
 
         public Builder with(Trello trello) {
-            Collection<Card> cards = new ArrayList<>();
-            for (Card card : trello.getBoardCards(board)) {
-                for (Label label : card.getLabels()) {
-                    String labelName = label.getName();
-                    if (label != null && labelName.equals(name)) {
-                        cards.add(card);
-                    }
-                }
-            }
-            this.cards = cards;
+            this.cards = filterCardsByLabelName(trello.getBoardCards(board), name);
             return this;
         }
 
