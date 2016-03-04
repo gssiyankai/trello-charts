@@ -5,7 +5,7 @@ import com.julienvey.trello.domain.Card;
 
 import java.util.Collection;
 
-import static com.gregory.TrelloUtils.extractCardPointsFromName;
+import static com.gregory.TrelloUtils.cardsPoints;
 import static com.gregory.TrelloUtils.filterCardsByLabelName;
 
 public final class Sprint {
@@ -27,11 +27,7 @@ public final class Sprint {
     }
 
     public int numberOfPoints() {
-        int points = 0;
-        for (Card card : cards) {
-            points += extractCardPointsFromName(card);
-        }
-        return points;
+        return cardsPoints(cards);
     }
 
     public Sprint printStats() {
@@ -40,6 +36,7 @@ public final class Sprint {
         System.out.println("End date : " + endDate);
         System.out.println("Number of cards: " + numberOfCards());
         System.out.println("Number of points: " + numberOfPoints());
+        System.out.println("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
         return this;
     }
 

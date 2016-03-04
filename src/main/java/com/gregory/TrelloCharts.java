@@ -15,6 +15,14 @@ public final class TrelloCharts {
         trello = new TrelloImpl(settings().trelloKey(), settings().trelloAccessToken());
     }
 
+    public Backlog backlog() throws IOException {
+        return Backlog.builder()
+                .on(settings().trelloBoardId())
+                .from("Backlog")
+                .with(trello)
+                .createBacklog();
+    }
+
     public Sprint sprint1() throws IOException {
         return Sprint.builder()
                 .of("Sprint 1")
@@ -37,6 +45,7 @@ public final class TrelloCharts {
 
     public static void main(String[] args) throws Exception {
         TrelloCharts charts = new TrelloCharts();
+        charts.backlog().printStats();
         charts.sprint1().printStats();
         charts.sprint2().printStats();
     }
