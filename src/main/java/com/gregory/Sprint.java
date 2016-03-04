@@ -21,20 +21,31 @@ public final class Sprint {
         this.cards = cards;
     }
 
-    public String name() {
-        return name;
+    public int numberOfCards() {
+        return cards.size();
     }
 
-    public String startDate() {
-        return startDate;
+    public int numberOfPoints() {
+        int points = 0;
+        for (Card card : cards) {
+            int cardPoints = Integer.parseInt(card.getName().replaceFirst("\\((\\d+)\\).*", "$1"));
+            points += cardPoints;
+        }
+        return points;
     }
 
-    public String endDate() {
-        return endDate;
+    public Sprint printStats() {
+        System.out.println(String.format("*-*-*-*-*-*-*-*-*-* Stats for %s *-*-*-*-*-*-*-*-*-*", name));
+        System.out.println("Start date : " + startDate);
+        System.out.println("End date : " + endDate);
+        System.out.println("Number of cards: " + numberOfCards());
+        System.out.println("Number of points: " + numberOfPoints());
+        return this;
     }
 
-    public Collection<Card> cards() {
-        return cards;
+    public Sprint generateBurndownChart() {
+        //TODO
+        throw new UnsupportedOperationException();
     }
 
     public static Builder builder() {
