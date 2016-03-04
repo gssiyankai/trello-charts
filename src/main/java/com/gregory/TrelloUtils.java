@@ -1,30 +1,35 @@
 package com.gregory;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
 import com.julienvey.trello.Trello;
 import com.julienvey.trello.domain.Action;
 import com.julienvey.trello.domain.Card;
 import com.julienvey.trello.domain.Label;
 import com.julienvey.trello.domain.TList;
 import com.julienvey.trello.impl.TrelloImpl;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 import static com.gregory.Settings.settings;
 
 public final class TrelloUtils {
 
     private static final Trello TRELLO = new TrelloImpl(settings().trelloApplicationKey(), settings().trelloAccessToken());
-    private static final List<TList> BOARD_LISTS = TRELLO.getBoardLists(settings().trelloBoardId());
-    private static final List<Card> BOARD_CARDS = TRELLO.getBoardCards(settings().trelloBoardId());
+
+    static {
+        Logger root = (Logger) LoggerFactory.getLogger(TrelloImpl.class);
+        root.setLevel(Level.OFF);
+    }
 
     private TrelloUtils() {
     }
 
     public static Collection<Card> cards() {
-        return BOARD_CARDS;
+        return TRELLO.getBoardCards(settings().trelloBoardId());
     }
 
     public static Collection<Card> cardsByLabelName(String name) {
@@ -42,9 +47,10 @@ public final class TrelloUtils {
 
     public static Collection<Card> cardsByListName(String name) {
         Collection<Card> result = new ArrayList<>();
+        Collection<TList> lists = listsByName(name);
         for (Card card : cards()) {
             String listId = card.getIdList();
-            for (TList list : listsByName(name)) {
+            for (TList list : lists) {
                 if (list.getId().equals(listId)) {
                     result.add(card);
                     break;
@@ -55,7 +61,7 @@ public final class TrelloUtils {
     }
 
     public static Collection<TList> lists() {
-        return BOARD_LISTS;
+        return TRELLO.getBoardLists(settings().trelloBoardId());
     }
 
     public static Collection<TList> listsByName(String name) {
