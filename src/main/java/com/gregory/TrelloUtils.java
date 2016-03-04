@@ -13,12 +13,15 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import static com.gregory.Settings.settings;
 
 public final class TrelloUtils {
 
     private static final Trello TRELLO = new TrelloImpl(settings().trelloApplicationKey(), settings().trelloAccessToken());
+    public static final List<TList> BOARD_LISTS = TRELLO.getBoardLists(settings().trelloBoardId());
+    public static final List<Card> BOARD_CARDS = TRELLO.getBoardCards(settings().trelloBoardId());
 
     static {
         Logger root = (Logger) LoggerFactory.getLogger(TrelloImpl.class);
@@ -29,7 +32,7 @@ public final class TrelloUtils {
     }
 
     public static Collection<Card> cards() {
-        return TRELLO.getBoardCards(settings().trelloBoardId());
+        return BOARD_CARDS;
     }
 
     public static Collection<Card> cardsByLabelName(String name) {
@@ -61,7 +64,7 @@ public final class TrelloUtils {
     }
 
     public static Collection<TList> lists() {
-        return TRELLO.getBoardLists(settings().trelloBoardId());
+        return BOARD_LISTS;
     }
 
     public static Collection<TList> listsByName(String name) {
