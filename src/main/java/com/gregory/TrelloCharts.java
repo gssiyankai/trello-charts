@@ -17,7 +17,18 @@ public final class TrelloCharts {
     }
 
     public void generateBurndownChart() throws IOException {
+        Sprint sprint2 = Sprint.builder()
+                .of("Sprint 2")
+                .from("2016-02-22")
+                .to("2016-03-04")
+                .on(settings().trelloBoardId())
+                .with(trello)
+                .createSprint();
 
+        System.out.println(sprint2.cards().size());
+        for (Card card : sprint2.cards()) {
+            System.out.println(card.getName());
+        }
     }
 
     public static void main(String[] args) throws Exception {
