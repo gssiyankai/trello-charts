@@ -22,4 +22,12 @@
         </plugins>
     </build>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.julienvey.trello</groupId>
+            <artifactId>trello-java-wrapper</artifactId>
+            <version>0.3.2</version>
+        </dependency>
+    </dependencies>
+
 </project>
