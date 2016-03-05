@@ -80,19 +80,19 @@ public final class History {
             }
         }
         data += "],\n";
-        for (int i = days.size() - 1; i >= 0; i--) {
+        for (int i = 0; i < days.size(); i++) {
             HistoryDay day = days.get(i);
             data += "['" + DAY_MONTH_DATE_FORMAT.format(day.date()) + "', ";
-            for (int j = 0; j < listNames.size(); j++) {
+            for (int j = listNames.size() - 1; j >= 0; j--) {
                 String listName = listNames.get(j);
                 TrelloCardDeck cards = day.cardsInListNamed(listName);
                 data += cards.points();
-                if (j < listNames.size() - 1) {
+                if (j > 0) {
                     data += ", ";
                 }
             }
             data += "]";
-            if (i > 0) {
+            if (i < days.size()-1) {
                 data += ", \n";
             }
         }
