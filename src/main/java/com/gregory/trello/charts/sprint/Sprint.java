@@ -1,7 +1,5 @@
 package com.gregory.trello.charts.sprint;
 
-import com.gregory.trello.model.TrelloAction;
-import com.gregory.trello.model.TrelloCard;
 import com.gregory.trello.model.TrelloCardDeck;
 
 import java.text.ParseException;
@@ -10,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.gregory.trello.utils.DateUtils.YEAR_MONTH_DAY_DATE_FORMAT;
+import static com.gregory.trello.utils.DateUtils.daysBetweenDates;
 import static com.gregory.trello.utils.TrelloUtils.board;
 
 public final class Sprint {
@@ -17,60 +16,32 @@ public final class Sprint {
     private final String name;
     private final Date startDate;
     private final Date endDate;
-    private final String completedListName;
+    private final TrelloCardDeck cards;
+    private final List<SprintDay> days;
 
-    private Sprint(String name, Date startDate, Date endDate, String completedListName) {
+    private Sprint(String name, Date startDate, Date endDate, String sprintBacklogListName, String inProgressListName, String completedListName) {
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.completedListName = completedListName;
-    }
-
-    public TrelloCardDeck cards() {
-        return board().cardsByLabelName(name);
-    }
-
-    public int numberOfCards() {
-        return cards().size();
-    }
-
-    public int numberOfPoints() {
-        return cards().points();
-    }
-
-    public TrelloCardDeck completedCards() {
-        TrelloCardDeck completedCards = cards();
-        completedCards.retainAll(board().cardsByListName(completedListName));
-
-        List<TrelloCard> sprintCompletedCards = new ArrayList<>();
-        for (TrelloCard card : completedCards) {
-            TrelloAction action = card.lastMoveActionBefore(endDate);
-            if (action != null && action.isMoveToList(completedListName)) {
-                sprintCompletedCards.add(card);
-            }
+        this.cards = board().cardsByLabelName(name);
+        this.days = new ArrayList<>();
+        for (Date date : daysBetweenDates(startDate, endDate)) {
+            days.add(new SprintDay(date, sprintBacklogListName, inProgressListName, completedListName, cards));
         }
-
-        return new TrelloCardDeck(sprintCompletedCards);
-    }
-
-    public int numberOfCompletedPoints() {
-        return completedCards().points();
     }
 
     public Sprint printStats() {
         System.out.println(String.format("*-*-*-*-*-*-*-*-*-* Stats for %s *-*-*-*-*-*-*-*-*-*", name));
         System.out.println("Start date : " + YEAR_MONTH_DAY_DATE_FORMAT.format(startDate));
         System.out.println("End date   : " + YEAR_MONTH_DAY_DATE_FORMAT.format(endDate));
-        System.out.println("Number of cards: " + numberOfCards());
-        System.out.println("Number of points: " + numberOfPoints());
-        System.out.println("\tNumber of completed points: " + numberOfCompletedPoints());
+        SprintDay lastDay = days.get(days.size() - 1);
+        System.out.println("Number of cards: " + lastDay.numberOfCards());
+        System.out.println("Number of points: " + lastDay.numberOfPoints());
+        System.out.println("\tNumber of points in progress: " + lastDay.numberOfInProgressPoints());
+        System.out.println("\tNumber of completed points: " + lastDay.numberOfCompletedPoints());
+        System.out.println("\tNumber of sprint backlog points: " + lastDay.numberOfSprintBacklogPoints());
         System.out.println("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
         return this;
-    }
-
-    public Sprint generateBurndownChart() {
-        //TODO
-        throw new UnsupportedOperationException();
     }
 
     public static Builder builder() {
@@ -81,6 +52,8 @@ public final class Sprint {
         private String name;
         private Date startDate;
         private Date endDate;
+        private String sprintBacklogListName;
+        private String inProgressListName;
         private String completedListName;
 
         public Builder of(String name) {
@@ -98,13 +71,23 @@ public final class Sprint {
             return this;
         }
 
+        public Builder withSprintBacklogListNamed(String sprintBacklogListName) {
+            this.sprintBacklogListName = sprintBacklogListName;
+            return this;
+        }
+
+        public Builder withInProgressListNamed(String inProgressListName) {
+            this.inProgressListName = inProgressListName;
+            return this;
+        }
+
         public Builder withCompletedListNamed(String completedListName) {
             this.completedListName = completedListName;
             return this;
         }
 
         public Sprint createSprint() {
-            return new Sprint(name, startDate, endDate, completedListName);
+            return new Sprint(name, startDate, endDate, sprintBacklogListName, inProgressListName, completedListName);
         }
 
     }

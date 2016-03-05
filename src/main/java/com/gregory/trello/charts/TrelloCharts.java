@@ -22,6 +22,8 @@ public final class TrelloCharts {
                 .of("Sprint 1")
                 .from("2016-02-08")
                 .to("2016-02-21")
+                .withSprintBacklogListNamed("To do")
+                .withInProgressListNamed("In progress")
                 .withCompletedListNamed("Done")
                 .createSprint();
     }
@@ -31,6 +33,8 @@ public final class TrelloCharts {
                 .of("Sprint 2")
                 .from("2016-02-22")
                 .to("2016-03-06")
+                .withSprintBacklogListNamed("To do")
+                .withInProgressListNamed("In progress")
                 .withCompletedListNamed("Done")
                 .createSprint();
     }
