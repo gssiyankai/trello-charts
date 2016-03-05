@@ -10,6 +10,7 @@ import java.util.List;
 
 public final class TrelloCard {
 
+    public static final String POINTS_PATTERN = "^\\w*\\((\\d+)\\).*$";
     private final Card card;
     private final List<TrelloAction> actions;
     private final List<TrelloLabel> labels;
@@ -54,11 +55,19 @@ public final class TrelloCard {
     }
 
     public int points() {
-        return Integer.parseInt(title().replaceFirst("\\((\\d+)\\).*", "$1"));
+        int points = 0;
+        if(isEstimated()) {
+            points = Integer.parseInt(title().replaceFirst(POINTS_PATTERN, "$1"));
+        }
+        return points;
     }
 
     public String id() {
         return card.getId();
+    }
+
+    public boolean isEstimated() {
+        return title().matches(POINTS_PATTERN);
     }
 
     public boolean isCreatedBefore(Date date) {
