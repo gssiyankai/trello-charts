@@ -63,7 +63,7 @@ public final class History {
         String statsData = computeStatsData();
         try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(cumulative_flow_diagram_html)))) {
             for (String line : lines) {
-                writer.append(line.replaceAll("\\$\\{DATA\\}", statsData));
+                writer.append(line.replace("${DATA}", statsData));
                 writer.append("\n");
             }
         }
