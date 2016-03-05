@@ -61,7 +61,7 @@ public final class TrelloCharts {
 
         charts.history()
                 .printStats()
-                .generateFlowDiagram();
+                .generateCumulativeFlowDiagram();
     }
 
 }

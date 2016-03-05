@@ -56,7 +56,7 @@ public final class History {
         return this;
     }
 
-    public void generateFlowDiagram() throws IOException, URISyntaxException {
+    public void generateCumulativeFlowDiagram() throws IOException, URISyntaxException {
         String cumulative_flow_diagram_html = "cumulative_flow_diagram.html";
         Path templatePath = Paths.get(this.getClass().getResource("/" + cumulative_flow_diagram_html).toURI());
         List<String> lines = Files.readAllLines(templatePath, Charset.defaultCharset());
