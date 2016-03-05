@@ -31,8 +31,4 @@ public final class TrelloCardDeck implements Iterable<TrelloCard> {
         return cards.size();
     }
 
-    public void retainAll(TrelloCardDeck other) {
-        cards.retainAll(other.cards);
-    }
-
 }

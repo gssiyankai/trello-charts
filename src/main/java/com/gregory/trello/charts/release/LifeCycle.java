@@ -9,20 +9,32 @@ import java.util.Date;
 import java.util.List;
 
 import static com.gregory.trello.utils.DateUtils.*;
+import static com.gregory.trello.utils.FileUtils.readResourceLines;
+import static com.gregory.trello.utils.FileUtils.writeToFile;
 import static com.gregory.trello.utils.TrelloUtils.board;
 
-public final class DevelopmentLifecycle {
+public final class LifeCycle {
 
     private final Date startDate;
     private final Date now;
     private final int sprintDurationInDays;
     private final String completedListName;
+    private final List<Cycle> cycles;
 
-    private DevelopmentLifecycle(Date startDate, int sprintDurationInDays, String completedListName) {
+    private LifeCycle(Date startDate, int sprintDurationInDays, String completedListName) {
         this.startDate = startDate;
         this.now = now();
         this.sprintDurationInDays = sprintDurationInDays;
         this.completedListName = completedListName;
+        this.cycles = new ArrayList<>();
+        Date current = startDate;
+        while(current.compareTo(now)<=0) {
+            cycles.add(new Cycle(current, completedListName));
+            current = addDays(current, sprintDurationInDays);
+        }
+        if(current.compareTo(now) > 0) {
+            cycles.add(new Cycle(now, completedListName));
+        }
     }
 
     public double numberOfPassedSprints() {
@@ -42,7 +54,7 @@ public final class DevelopmentLifecycle {
     }
 
     public int numberOfSprintsToComplete() {
-        return (numberOfPoints() - numberOfCompletedPoints()) / velocity();
+        return (int) (Math.ceil(numberOfPoints() - numberOfCompletedPoints()) / velocity());
     }
 
     public int numberOfCards() {
@@ -71,8 +83,8 @@ public final class DevelopmentLifecycle {
         return numberOfEstimatedCards() * 100. / numberOfCards();
     }
 
-    public DevelopmentLifecycle printStats() {
-        System.out.println("*-*-*-*-*-*-*-*-*-* Stats for development lifecycle *-*-*-*-*-*-*-*-*-*");
+    public LifeCycle printStats() {
+        System.out.println("*-*-*-*-*-*-*-*-*-* Stats for backlog *-*-*-*-*-*-*-*-*-*");
         System.out.println("Number of points: " + numberOfPoints());
         System.out.println("Number of passed sprints: " + numberOfPassedSprints());
         System.out.println("Number of completed points: " + numberOfCompletedPoints());
@@ -81,6 +93,39 @@ public final class DevelopmentLifecycle {
         System.out.println("Percentage of cards estimated: " + percentageOfEstimatedCards());
         System.out.println("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
         return this;
+    }
+
+    public LifeCycle generateBurnupChart() {
+        String burnupChartHtml = "burnup_chart.html";
+        String template = readResourceLines(burnupChartHtml);
+        writeToFile(
+                burnupChartHtml,
+                template.replace("${DATA}", computeStatsData()));
+        return this;
+    }
+
+    private String computeStatsData() {
+        int completedPoints = 0;
+        String data = "";
+        for (Cycle cycle : cycles) {
+            data += "['" + DAY_MONTH_YEAR_DATE_FORMAT.format(cycle.endDate()) + "',"
+                    + cycle.numberOfPoints() + ","
+                    + cycle.numberOfCompletedPoints() + ","
+                    + "true"
+                    + "]";
+            data += ",\n";
+            completedPoints = cycle.numberOfCompletedPoints();
+        }
+        for (int i = 0; i < numberOfSprintsToComplete(); i++) {
+            completedPoints += velocity();
+            data += "['" + DAY_MONTH_YEAR_DATE_FORMAT.format(addDays(now, sprintDurationInDays*i)) + "',"
+                    + numberOfPoints() + ","
+                    + completedPoints + ","
+                    + "false"
+                    + "]";
+            data += ",\n";
+        }
+        return data;
     }
 
     public static Builder builder() {
@@ -107,8 +152,8 @@ public final class DevelopmentLifecycle {
             return this;
         }
 
-        public DevelopmentLifecycle createDevelopmentLifecycle() {
-            return new DevelopmentLifecycle(startDate, sprintDurationInDays, completedListName);
+        public LifeCycle createLifeCycle() {
+            return new LifeCycle(startDate, sprintDurationInDays, completedListName);
         }
     }
 

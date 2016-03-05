@@ -10,6 +10,7 @@ public final class DateUtils {
 
     public static final SimpleDateFormat YEAR_MONTH_DAY_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
     public static final SimpleDateFormat DAY_MONTH_DATE_FORMAT = new SimpleDateFormat("dd MMM");
+    public static final SimpleDateFormat DAY_MONTH_YEAR_DATE_FORMAT = new SimpleDateFormat("dd MMM yyyy");
 
     private DateUtils() {
     }
@@ -46,9 +47,13 @@ public final class DateUtils {
     }
 
     public static Date dayAfter(Date date) {
+        return addDays(date, 1);
+    }
+
+    public static Date addDays(Date date, int n) {
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(date);
-        calendar.add(Calendar.DATE, 1);
+        calendar.add(Calendar.DATE, n);
         return calendar.getTime();
     }
 

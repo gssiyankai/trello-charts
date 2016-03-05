@@ -77,14 +77,14 @@ public final class TrelloBoard {
         return result;
     }
 
-    public List<TrelloCard> cardsAt(Date date) {
+    public TrelloCardDeck cardsAt(Date date) {
         List<TrelloCard> result = new ArrayList<>();
         for (TrelloCard card : cards) {
             if (card.isCreatedBefore(date)) {
                 result.add(card);
             }
         }
-        return result;
+        return new TrelloCardDeck(result);
     }
 
 }

@@ -82,7 +82,7 @@ public final class History {
             }
             data += "]";
             if (i < days.size() - 1) {
-                data += ", \n";
+                data += ",\n";
             }
         }
         return data;
