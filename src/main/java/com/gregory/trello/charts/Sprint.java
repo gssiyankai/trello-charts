@@ -1,44 +1,70 @@
-package com.gregory;
+package com.gregory.trello.charts;
 
-import com.julienvey.trello.domain.Action;
-import com.julienvey.trello.domain.Card;
+import com.gregory.trello.model.TrelloAction;
+import com.gregory.trello.model.TrelloCard;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
-import static com.gregory.TrelloUtils.*;
+import static com.gregory.trello.utils.DateUtils.DATE_FORMAT;
+import static com.gregory.trello.utils.TrelloUtils.board;
 
 public final class Sprint {
-
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
     private final String name;
     private final Date startDate;
     private final Date endDate;
-    private final Collection<Card> completedCards;
-    private final Collection<Card> cards;
+    private final String completedListName;
 
-    private Sprint(String name, Date startDate, Date endDate, Collection<Card> completedCards, Collection<Card> cards) {
+    private Sprint(String name, Date startDate, Date endDate, String completedListName) {
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.completedCards = completedCards;
-        this.cards = cards;
+        this.completedListName = completedListName;
+    }
+
+    public List<TrelloCard> cards() {
+        return board().cardsByLabelName(name);
     }
 
     public int numberOfCards() {
-        return cards.size();
+        return cards().size();
     }
 
     public int numberOfPoints() {
-        return cardsPoints(cards);
+        int points = 0;
+        for (TrelloCard card : cards()) {
+            points += card.points();
+        }
+        return points;
+    }
+
+    public List<TrelloCard> completedCards() {
+        List<TrelloCard> completedCards = cards();
+        completedCards.retainAll(board().cardsByListName(completedListName));
+
+        List<TrelloCard> sprintCompletedCards = new ArrayList<>();
+        for (TrelloCard card : completedCards) {
+            for (TrelloAction action : card.actions()) {
+                if (action.isDoneWithin(startDate, endDate)
+                        && action.isMoveToList(completedListName)) {
+                    sprintCompletedCards.add(card);
+                    break;
+                }
+            }
+        }
+
+        return sprintCompletedCards;
     }
 
     public int numberOfCompletedPoints() {
-        return cardsPoints(completedCards);
+        int points = 0;
+        for (TrelloCard card : completedCards()) {
+            points += card.points();
+        }
+        return points;
     }
 
     public Sprint printStats() {
@@ -65,7 +91,7 @@ public final class Sprint {
         private String name;
         private Date startDate;
         private Date endDate;
-        private String completedList;
+        private String completedListName;
 
         public Builder of(String name) {
             this.name = name;
@@ -82,34 +108,13 @@ public final class Sprint {
             return this;
         }
 
-        public Builder withCompletedListNamed(String completedList) {
-            this.completedList = completedList;
+        public Builder withCompletedListNamed(String completedListName) {
+            this.completedListName = completedListName;
             return this;
         }
 
         public Sprint createSprint() {
-            return new Sprint(name, startDate, endDate, sprintCompletedCards(), sprintCards());
-        }
-
-        private Collection<Card> sprintCards() {
-            return cardsByLabelName(name);
-        }
-
-        private Collection<Card> sprintCompletedCards() {
-            Collection<Card> completedCards = sprintCards();
-            completedCards.retainAll(cardsByListName(completedList));
-
-            Collection<Card> sprintCompletedCards = new ArrayList<>();
-            for (Card card : completedCards) {
-                for (Action action : card.getActions()) {
-                    if (isActionDoneWithin(action, startDate, endDate)
-                            && isMoveActionToList(action, completedList)) {
-                        sprintCompletedCards.add(card);
-                        break;
-                    }
-                }
-            }
-            return sprintCompletedCards;
+            return new Sprint(name, startDate, endDate, completedListName);
         }
 
     }

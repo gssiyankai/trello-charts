@@ -1,4 +1,4 @@
-package com.gregory;
+package com.gregory.trello.config;
 
 import java.io.IOException;
 import java.util.Properties;

@@ -1,22 +1,19 @@
-package com.gregory;
+package com.gregory.trello.charts;
 
-import com.julienvey.trello.Trello;
-import com.julienvey.trello.impl.TrelloImpl;
-
-import java.io.IOException;
 import java.text.ParseException;
+import java.util.Date;
 
-import static com.gregory.Settings.settings;
+import static com.gregory.trello.utils.DateUtils.DATE_FORMAT;
 
 public final class TrelloCharts {
 
-    public Backlog backlog() throws IOException {
+    public Backlog backlog() {
         return Backlog.builder()
                 .withListNamed("Backlog")
                 .createBacklog();
     }
 
-    public Sprint sprint1() throws IOException, ParseException {
+    public Sprint sprint1() throws ParseException {
         return Sprint.builder()
                 .of("Sprint 1")
                 .from("2016-02-08")
@@ -25,7 +22,7 @@ public final class TrelloCharts {
                 .createSprint();
     }
 
-    public Sprint sprint2() throws IOException, ParseException {
+    public Sprint sprint2() throws ParseException {
         return Sprint.builder()
                 .of("Sprint 2")
                 .from("2016-02-22")
@@ -34,11 +31,23 @@ public final class TrelloCharts {
                 .createSprint();
     }
 
+    public History history() throws ParseException {
+        return History.builder()
+                .from("2016-02-08")
+                .to(DATE_FORMAT.format(new Date()))
+                .withListNamed("Backlog")
+                .withListNamed("To do")
+                .withListNamed("In progress")
+                .withListNamed("Done")
+                .createHistory();
+    }
+
     public static void main(String[] args) throws Exception {
         TrelloCharts charts = new TrelloCharts();
         charts.backlog().printStats();
         charts.sprint1().printStats();
         charts.sprint2().printStats();
+        charts.history().printStats();
     }
 
 }

@@ -1,22 +1,26 @@
-package com.gregory;
+package com.gregory.trello.charts;
 
-import com.julienvey.trello.domain.Card;
+import com.gregory.trello.model.TrelloCard;
 
-import java.util.Collection;
+import java.util.List;
 
-import static com.gregory.TrelloUtils.cardsByListName;
-import static com.gregory.TrelloUtils.cardsPoints;
+import static com.gregory.trello.utils.TrelloUtils.board;
 
 public final class Backlog {
 
-    private final Collection<Card> cards;
+    private final String listName;
 
-    private Backlog(Collection<Card> cards) {
-        this.cards = cards;
+    private Backlog(String listName) {
+        this.listName = listName;
     }
 
     public int numberOfPoints() {
-        return cardsPoints(cards);
+        List<TrelloCard> trelloCards = board().cardsByListName(listName);
+        int points = 0;
+        for (TrelloCard card : trelloCards) {
+            points += card.points();
+        }
+        return points;
     }
 
     public Backlog printStats() {
@@ -39,8 +43,7 @@ public final class Backlog {
         }
 
         public Backlog createBacklog() {
-            Collection<Card> cards = cardsByListName(listName);
-            return new Backlog(cards);
+            return new Backlog(listName);
         }
     }
 
