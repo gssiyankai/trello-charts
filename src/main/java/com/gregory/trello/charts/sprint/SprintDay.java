@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.gregory.trello.utils.DateUtils.dayAfter;
+
 final class SprintDay {
 
     private final Date date;
@@ -24,52 +26,56 @@ final class SprintDay {
         this.sprintCards = sprintCards;
     }
 
-    public TrelloCardDeck cards() {
+    Date date() {
+        return date;
+    }
+
+    TrelloCardDeck cards() {
         List<TrelloCard> cards = new ArrayList<>();
         for (TrelloCard card : sprintCards) {
-            if (card.isCreatedBefore(date)) {
+            if (card.isCreatedBefore(dayAfter(date))) {
                 cards.add(card);
             }
         }
         return new TrelloCardDeck(cards);
     }
 
-    public int numberOfCards() {
+    int numberOfCards() {
         return cards().size();
     }
 
-    public int numberOfPoints() {
+    int numberOfPoints() {
         return cards().points();
     }
 
-    public TrelloCardDeck completedCards() {
+    TrelloCardDeck completedCards() {
         return cardsInListNamed(completedListName);
     }
 
-    public int numberOfCompletedPoints() {
+    int numberOfCompletedPoints() {
         return completedCards().points();
     }
 
-    public TrelloCardDeck inProgressCards() {
+    TrelloCardDeck inProgressCards() {
         return cardsInListNamed(inProgressListName);
     }
 
-    public int numberOfInProgressPoints() {
+    int numberOfInProgressPoints() {
         return inProgressCards().points();
     }
 
-    public TrelloCardDeck sprintBacklogCards() {
+    TrelloCardDeck sprintBacklogCards() {
         return cardsInListNamed(sprintBacklogListName);
     }
 
-    public int numberOfSprintBacklogPoints() {
+    int numberOfSprintBacklogPoints() {
         return sprintBacklogCards().points();
     }
 
     private TrelloCardDeck cardsInListNamed(String listName) {
         List<TrelloCard> cards = new ArrayList<>();
         for (TrelloCard card : cards()) {
-            TrelloAction action = card.lastMoveActionBefore(date);
+            TrelloAction action = card.lastMoveActionBefore(dayAfter(date));
             if (action != null && action.isMoveToList(listName)) {
                 cards.add(card);
             }

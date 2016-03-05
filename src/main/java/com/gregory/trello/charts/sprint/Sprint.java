@@ -2,13 +2,16 @@ package com.gregory.trello.charts.sprint;
 
 import com.gregory.trello.model.TrelloCardDeck;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static com.gregory.trello.utils.DateUtils.YEAR_MONTH_DAY_DATE_FORMAT;
-import static com.gregory.trello.utils.DateUtils.daysBetweenDates;
+import static com.gregory.trello.utils.DateUtils.*;
+import static com.gregory.trello.utils.FileUtils.readResourceLines;
+import static com.gregory.trello.utils.FileUtils.writeToFile;
 import static com.gregory.trello.utils.TrelloUtils.board;
 
 public final class Sprint {
@@ -42,6 +45,38 @@ public final class Sprint {
         System.out.println("\tNumber of sprint backlog points: " + lastDay.numberOfSprintBacklogPoints());
         System.out.println("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
         return this;
+    }
+
+    public void generateBurndownChart() throws IOException, URISyntaxException {
+        String burndownChartHtml = "burndown_chart.html";
+        String template = readResourceLines(burndownChartHtml);
+        writeToFile(
+                name.toLowerCase().replace(" ", "_") + "_" + burndownChartHtml,
+                template.replace("${DATA}", computeStatsData())
+                        .replace("${SPRINT_NAME}", name));
+    }
+
+    private String computeStatsData() {
+        String data = "['Day', 'Actual burndown', 'Guideline'],\n";
+        int sprintWorkingDays = workingDaysWithin(startDate, endDate).size();
+        for (int i = 0; i < days.size(); i++) {
+            SprintDay day = days.get(i);
+            Date date = day.date();
+            int points = day.numberOfPoints();
+            int remainingPoints = points - day.numberOfCompletedPoints();
+
+            int numberOfPassedWorkingDays = workingDaysWithin(startDate, date).size();
+            int expectedRemainingPoints = (int) (points * (sprintWorkingDays - numberOfPassedWorkingDays) * 1. / sprintWorkingDays);
+
+            data += "['" + DAY_MONTH_DATE_FORMAT.format(date) + "', "
+                    + remainingPoints + ", "
+                    + expectedRemainingPoints
+                    + "]";
+            if (i < days.size() - 1) {
+                data += ", \n";
+            }
+        }
+        return data;
     }
 
     public static Builder builder() {

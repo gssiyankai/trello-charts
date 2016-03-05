@@ -53,11 +53,16 @@ public final class TrelloCharts {
     public static void main(String[] args) throws Exception {
         TrelloCharts charts = new TrelloCharts();
 
-        charts.backlog().printStats();
+        charts.backlog()
+                .printStats();
 
-        charts.sprint1().printStats();
+        charts.sprint1()
+                .printStats()
+                .generateBurndownChart();
 
-        charts.sprint2().printStats();
+        charts.sprint2()
+                .printStats()
+                .generateBurndownChart();
 
         charts.history()
                 .printStats()

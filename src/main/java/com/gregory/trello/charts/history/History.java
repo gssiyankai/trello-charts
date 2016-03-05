@@ -3,21 +3,14 @@ package com.gregory.trello.charts.history;
 import com.gregory.trello.model.TrelloCard;
 import com.gregory.trello.model.TrelloCardDeck;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.URISyntaxException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import static com.gregory.trello.utils.DateUtils.*;
+import static com.gregory.trello.utils.FileUtils.readResourceLines;
+import static com.gregory.trello.utils.FileUtils.writeToFile;
 
 public final class History {
 
@@ -56,17 +49,12 @@ public final class History {
         return this;
     }
 
-    public void generateCumulativeFlowDiagram() throws IOException, URISyntaxException {
-        String cumulative_flow_diagram_html = "cumulative_flow_diagram.html";
-        Path templatePath = Paths.get(this.getClass().getResource("/" + cumulative_flow_diagram_html).toURI());
-        List<String> lines = Files.readAllLines(templatePath, Charset.defaultCharset());
-        String statsData = computeStatsData();
-        try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(cumulative_flow_diagram_html)))) {
-            for (String line : lines) {
-                writer.append(line.replace("${DATA}", statsData));
-                writer.append("\n");
-            }
-        }
+    public void generateCumulativeFlowDiagram() {
+        String cumulativeFlowDiagramHtml = "cumulative_flow_diagram.html";
+        String template = readResourceLines(cumulativeFlowDiagramHtml);
+        writeToFile(
+                cumulativeFlowDiagramHtml,
+                template.replace("${DATA}", computeStatsData()));
     }
 
     private String computeStatsData() {
@@ -92,7 +80,7 @@ public final class History {
                 }
             }
             data += "]";
-            if (i < days.size()-1) {
+            if (i < days.size() - 1) {
                 data += ", \n";
             }
         }
