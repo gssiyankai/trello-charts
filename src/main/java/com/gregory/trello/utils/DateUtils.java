@@ -14,6 +14,10 @@ public final class DateUtils {
     private DateUtils() {
     }
 
+    public static Date now() {
+        return new Date();
+    }
+
     public static List<Date> daysBetweenDates(Date start, Date end) {
         List<Date> dates = new ArrayList<>();
         Calendar calendar = new GregorianCalendar();

@@ -19,9 +19,9 @@ public final class History {
     private final List<String> listNames;
     private final List<HistoryDay> days;
 
-    private History(Date startDate, Date endDate, List<String> listNames) {
+    private History(Date startDate, List<String> listNames) {
         this.startDate = startDate;
-        this.endDate = endDate;
+        this.endDate = now();
         this.listNames = listNames;
         this.days = new ArrayList<>();
         for (Date date : daysBetweenDates(startDate, endDate)) {
@@ -93,16 +93,10 @@ public final class History {
 
     public static class Builder {
         private Date startDate;
-        private Date endDate;
         private List<String> listNames = new ArrayList<>();
 
         public Builder from(String startDate) throws ParseException {
             this.startDate = YEAR_MONTH_DAY_DATE_FORMAT.parse(startDate);
-            return this;
-        }
-
-        public Builder to(String endDate) throws ParseException {
-            this.endDate = YEAR_MONTH_DAY_DATE_FORMAT.parse(endDate);
             return this;
         }
 
@@ -112,7 +106,7 @@ public final class History {
         }
 
         public History createHistory() {
-            return new History(startDate, endDate, listNames);
+            return new History(startDate, listNames);
         }
     }
 
