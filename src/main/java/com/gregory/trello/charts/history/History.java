@@ -22,7 +22,7 @@ public final class History {
     private final Date startDate;
     private final Date endDate;
     private final List<String> listNames;
-    private final List<Day> days;
+    private final List<HistoryDay> days;
 
     private History(Date startDate, Date endDate, List<String> listNames) {
         this.startDate = startDate;
@@ -30,7 +30,7 @@ public final class History {
         this.listNames = listNames;
         this.days = new ArrayList<>();
         for (Date date : daysBetweenDates(startDate, endDate)) {
-            days.add(new Day(date));
+            days.add(new HistoryDay(date));
         }
     }
 
@@ -38,7 +38,7 @@ public final class History {
         System.out.println("*-*-*-*-*-*-*-*-*-* History stats *-*-*-*-*-*-*-*-*-*");
         System.out.println("Start date : " + YEAR_MONTH_DAY_DATE_FORMAT.format(startDate));
         System.out.println("End date   : " + YEAR_MONTH_DAY_DATE_FORMAT.format(endDate));
-        for (Day day : days) {
+        for (HistoryDay day : days) {
             System.out.println("\t@" + YEAR_MONTH_DAY_DATE_FORMAT.format(day.date()));
             for (String listName : listNames) {
                 System.out.println("\t\t" + listName + " :");
@@ -79,7 +79,7 @@ public final class History {
         }
         data += "],";
         for (int i = days.size() - 1; i >= 0; i--) {
-            Day day = days.get(i);
+            HistoryDay day = days.get(i);
             data += "['" + DAY_MONTH_DATE_FORMAT.format(day.date()) + "', ";
             for (int j = 0; j < listNames.size(); j++) {
                 String listName = listNames.get(j);

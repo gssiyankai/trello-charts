@@ -8,12 +8,12 @@ import java.util.*;
 import static com.gregory.trello.model.TrelloCardDeck.EMPTY_DECK;
 import static com.gregory.trello.utils.TrelloUtils.board;
 
-public final class Day {
+public final class HistoryDay {
 
     private final Date date;
     private final Map<String, TrelloCardDeck> decks;
 
-    Day(Date date) {
+    HistoryDay(Date date) {
         this.date = date;
         this.decks = new HashMap<>();
         Map<String, List<TrelloCard>> cards = new HashMap<>();
@@ -33,7 +33,7 @@ public final class Day {
         }
     }
 
-    public Date date() {
+    Date date() {
         return date;
     }
 
