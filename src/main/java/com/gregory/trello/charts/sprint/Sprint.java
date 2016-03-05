@@ -2,8 +2,6 @@ package com.gregory.trello.charts.sprint;
 
 import com.gregory.trello.model.TrelloCardDeck;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -47,7 +45,7 @@ public final class Sprint {
         return this;
     }
 
-    public void generateBurndownChart() throws IOException, URISyntaxException {
+    public void generateBurndownChart() {
         String burndownChartHtml = "burndown_chart.html";
         String template = readResourceLines(burndownChartHtml);
         writeToFile(
