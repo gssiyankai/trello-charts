@@ -76,4 +76,9 @@ public final class TrelloCard {
     public String title() {
         return card.getName();
     }
+
+    public String url() {
+        return card.getUrl();
+    }
+
 }

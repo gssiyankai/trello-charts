@@ -68,7 +68,7 @@ public final class History {
                 System.out.println("\t\t\tcards : ");
                 if (cards.containsKey(listName)) {
                     for (TrelloCard card : cards.get(listName)) {
-                        System.out.println("\t\t\t\t" + card.title());
+                        System.out.println("\t\t\t\t" + card.title() + " " + card.url());
                     }
                     System.out.println("\t\t\tNumber of points : " + points.get(listName));
                 } else {
