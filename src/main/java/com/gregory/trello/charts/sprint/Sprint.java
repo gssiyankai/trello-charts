@@ -45,13 +45,14 @@ public final class Sprint {
         return this;
     }
 
-    public void generateBurndownChart() {
+    public Sprint generateBurndownChart() {
         String burndownChartHtml = "burndown_chart.html";
         String template = readResourceLines(burndownChartHtml);
         writeToFile(
                 name.toLowerCase().replace(" ", "_") + "_" + burndownChartHtml,
                 template.replace("${DATA}", computeStatsData())
                         .replace("${SPRINT_NAME}", name));
+        return this;
     }
 
     private String computeStatsData() {

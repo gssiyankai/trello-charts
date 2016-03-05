@@ -49,12 +49,13 @@ public final class History {
         return this;
     }
 
-    public void generateCumulativeFlowDiagram() {
+    public History generateCumulativeFlowDiagram() {
         String cumulativeFlowDiagramHtml = "cumulative_flow_diagram.html";
         String template = readResourceLines(cumulativeFlowDiagramHtml);
         writeToFile(
                 cumulativeFlowDiagramHtml,
                 template.replace("${DATA}", computeStatsData()));
+        return this;
     }
 
     private String computeStatsData() {
