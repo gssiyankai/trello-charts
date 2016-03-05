@@ -31,7 +31,7 @@ public final class Backlog {
     public TrelloCardDeck estimatedCards() {
         List<TrelloCard> estimatedCards = new ArrayList<>();
         for (TrelloCard card : cards()) {
-            if(card.isEstimated()) {
+            if (card.isEstimated()) {
                 estimatedCards.add(card);
             }
         }

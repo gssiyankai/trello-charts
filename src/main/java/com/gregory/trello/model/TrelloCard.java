@@ -56,7 +56,7 @@ public final class TrelloCard {
 
     public int points() {
         int points = 0;
-        if(isEstimated()) {
+        if (isEstimated()) {
             points = Integer.parseInt(title().replaceFirst(POINTS_PATTERN, "$1"));
         }
         return points;
