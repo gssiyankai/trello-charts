@@ -26,8 +26,23 @@ public final class TrelloCard {
         }
     }
 
-    public List<TrelloAction> actions() {
-        return actions;
+    public TrelloAction lastMoveActionBefore(Date date) {
+        for (TrelloAction action : actions) {
+            if (action.isMove() && action.isDoneBefore(date)) {
+                return action;
+            }
+        }
+        return null;
+    }
+
+    public TrelloAction firstMoveActionAfter(Date date) {
+        for (int i = actions.size() - 1; i >= 0; i--) {
+            TrelloAction action = actions.get(i);
+            if (action.isMove() && action.isDoneAfter(date)) {
+                return action;
+            }
+        }
+        return null;
     }
 
     public List<TrelloLabel> labels() {
@@ -58,16 +73,13 @@ public final class TrelloCard {
         if (actions.isEmpty()) {
             return card.getIdList();
         } else {
-            for (TrelloAction action : actions) {
-                if (action.isUpdate() && action.isDoneBefore(date)) {
-                    return action.afterListId();
-                }
+            TrelloAction action = lastMoveActionBefore(date);
+            if (action != null) {
+                return action.afterListId();
             }
-            for (int i = actions.size() - 1; i >= 0; i--) {
-                TrelloAction action = actions.get(i);
-                if (action.isUpdate()) {
-                    return action.beforeListId();
-                }
+            action = firstMoveActionAfter(date);
+            if (action != null) {
+                return action.beforeListId();
             }
             throw new UnsupportedOperationException();
         }

@@ -1,8 +1,12 @@
 package com.gregory.trello.model;
 
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
-public final class TrelloCardDeck {
+public final class TrelloCardDeck implements Iterable<TrelloCard> {
+
+    public static final TrelloCardDeck EMPTY_DECK = new TrelloCardDeck(Collections.<TrelloCard>emptyList());
 
     private final List<TrelloCard> cards;
 
@@ -16,6 +20,19 @@ public final class TrelloCardDeck {
             points += card.points();
         }
         return points;
+    }
+
+    @Override
+    public Iterator<TrelloCard> iterator() {
+        return cards.iterator();
+    }
+
+    public int size() {
+        return cards.size();
+    }
+
+    public void retainAll(TrelloCardDeck other) {
+        cards.retainAll(other.cards);
     }
 
 }

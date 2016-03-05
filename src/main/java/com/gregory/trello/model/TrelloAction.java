@@ -24,12 +24,12 @@ public final class TrelloAction {
         return action.getDate().compareTo(date) <= 0;
     }
 
-    public boolean isUpdate() {
+    public boolean isMove() {
         return "updateCard".equals(action.getType());
     }
 
     public boolean isMoveToList(String toList) {
-        return isUpdate() && toList.equals(action.getData().getListAfter().getName());
+        return isMove() && toList.equals(action.getData().getListAfter().getName());
     }
 
     public String afterListId() {

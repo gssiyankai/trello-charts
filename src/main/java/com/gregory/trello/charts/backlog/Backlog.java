@@ -1,8 +1,4 @@
-package com.gregory.trello.charts;
-
-import com.gregory.trello.model.TrelloCard;
-
-import java.util.List;
+package com.gregory.trello.charts.backlog;
 
 import static com.gregory.trello.utils.TrelloUtils.board;
 
@@ -15,12 +11,9 @@ public final class Backlog {
     }
 
     public int numberOfPoints() {
-        List<TrelloCard> trelloCards = board().cardsByListName(listName);
-        int points = 0;
-        for (TrelloCard card : trelloCards) {
-            points += card.points();
-        }
-        return points;
+        return board()
+                .cardsByListName(listName)
+                .points();
     }
 
     public Backlog printStats() {

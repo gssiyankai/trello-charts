@@ -1,14 +1,15 @@
-package com.gregory.trello.charts;
+package com.gregory.trello.charts.sprint;
 
 import com.gregory.trello.model.TrelloAction;
 import com.gregory.trello.model.TrelloCard;
+import com.gregory.trello.model.TrelloCardDeck;
 
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static com.gregory.trello.utils.DateUtils.DATE_FORMAT;
+import static com.gregory.trello.utils.DateUtils.YEAR_MONTH_DAY_DATE_FORMAT;
 import static com.gregory.trello.utils.TrelloUtils.board;
 
 public final class Sprint {
@@ -25,7 +26,7 @@ public final class Sprint {
         this.completedListName = completedListName;
     }
 
-    public List<TrelloCard> cards() {
+    public TrelloCardDeck cards() {
         return board().cardsByLabelName(name);
     }
 
@@ -34,43 +35,32 @@ public final class Sprint {
     }
 
     public int numberOfPoints() {
-        int points = 0;
-        for (TrelloCard card : cards()) {
-            points += card.points();
-        }
-        return points;
+        return cards().points();
     }
 
-    public List<TrelloCard> completedCards() {
-        List<TrelloCard> completedCards = cards();
+    public TrelloCardDeck completedCards() {
+        TrelloCardDeck completedCards = cards();
         completedCards.retainAll(board().cardsByListName(completedListName));
 
         List<TrelloCard> sprintCompletedCards = new ArrayList<>();
         for (TrelloCard card : completedCards) {
-            for (TrelloAction action : card.actions()) {
-                if (action.isDoneWithin(startDate, endDate)
-                        && action.isMoveToList(completedListName)) {
-                    sprintCompletedCards.add(card);
-                    break;
-                }
+            TrelloAction action = card.lastMoveActionBefore(endDate);
+            if (action != null && action.isMoveToList(completedListName)) {
+                sprintCompletedCards.add(card);
             }
         }
 
-        return sprintCompletedCards;
+        return new TrelloCardDeck(sprintCompletedCards);
     }
 
     public int numberOfCompletedPoints() {
-        int points = 0;
-        for (TrelloCard card : completedCards()) {
-            points += card.points();
-        }
-        return points;
+        return completedCards().points();
     }
 
     public Sprint printStats() {
         System.out.println(String.format("*-*-*-*-*-*-*-*-*-* Stats for %s *-*-*-*-*-*-*-*-*-*", name));
-        System.out.println("Start date : " + DATE_FORMAT.format(startDate));
-        System.out.println("End date   : " + DATE_FORMAT.format(endDate));
+        System.out.println("Start date : " + YEAR_MONTH_DAY_DATE_FORMAT.format(startDate));
+        System.out.println("End date   : " + YEAR_MONTH_DAY_DATE_FORMAT.format(endDate));
         System.out.println("Number of cards: " + numberOfCards());
         System.out.println("Number of points: " + numberOfPoints());
         System.out.println("\tNumber of completed points: " + numberOfCompletedPoints());
@@ -99,12 +89,12 @@ public final class Sprint {
         }
 
         public Builder from(String startDate) throws ParseException {
-            this.startDate = DATE_FORMAT.parse(startDate);
+            this.startDate = YEAR_MONTH_DAY_DATE_FORMAT.parse(startDate);
             return this;
         }
 
         public Builder to(String endDate) throws ParseException {
-            this.endDate = DATE_FORMAT.parse(endDate);
+            this.endDate = YEAR_MONTH_DAY_DATE_FORMAT.parse(endDate);
             return this;
         }
 

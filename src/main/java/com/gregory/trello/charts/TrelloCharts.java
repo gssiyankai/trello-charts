@@ -1,9 +1,13 @@
 package com.gregory.trello.charts;
 
+import com.gregory.trello.charts.backlog.Backlog;
+import com.gregory.trello.charts.history.History;
+import com.gregory.trello.charts.sprint.Sprint;
+
 import java.text.ParseException;
 import java.util.Date;
 
-import static com.gregory.trello.utils.DateUtils.DATE_FORMAT;
+import static com.gregory.trello.utils.DateUtils.YEAR_MONTH_DAY_DATE_FORMAT;
 
 public final class TrelloCharts {
 
@@ -34,7 +38,7 @@ public final class TrelloCharts {
     public History history() throws ParseException {
         return History.builder()
                 .from("2016-02-08")
-                .to(DATE_FORMAT.format(new Date()))
+                .to(YEAR_MONTH_DAY_DATE_FORMAT.format(new Date()))
                 .withListNamed("Backlog")
                 .withListNamed("To do")
                 .withListNamed("In progress")

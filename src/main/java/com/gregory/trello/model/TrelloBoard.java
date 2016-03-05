@@ -26,7 +26,7 @@ public final class TrelloBoard {
         }
     }
 
-    public List<TrelloCard> cardsByLabelName(String labelName) {
+    public TrelloCardDeck cardsByLabelName(String labelName) {
         List<TrelloCard> result = new ArrayList<>();
         for (TrelloCard card : cards) {
             for (TrelloLabel label : card.labels()) {
@@ -35,10 +35,10 @@ public final class TrelloBoard {
                 }
             }
         }
-        return result;
+        return new TrelloCardDeck(result);
     }
 
-    public List<TrelloCard> cardsByListName(String listName) {
+    public TrelloCardDeck cardsByListName(String listName) {
         List<TrelloCard> result = new ArrayList<>();
         for (TrelloCard card : cards) {
             String listId = card.listId();
@@ -49,7 +49,7 @@ public final class TrelloBoard {
                 }
             }
         }
-        return result;
+        return new TrelloCardDeck(result);
     }
 
     public List<TrelloList> listsByName(String listName) {
