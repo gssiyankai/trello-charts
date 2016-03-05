@@ -3,13 +3,19 @@ package com.gregory.trello.charts.history;
 import com.gregory.trello.model.TrelloCard;
 import com.gregory.trello.model.TrelloCardDeck;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.URISyntaxException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
-import static com.gregory.trello.utils.DateUtils.YEAR_MONTH_DAY_DATE_FORMAT;
-import static com.gregory.trello.utils.DateUtils.daysBetweenDates;
+import static com.gregory.trello.utils.DateUtils.*;
 
 public final class History {
 
@@ -48,6 +54,48 @@ public final class History {
         return this;
     }
 
+    public void generateFlowDiagram() throws IOException, URISyntaxException {
+        String cumulative_flow_diagram_html = "cumulative_flow_diagram.html";
+        Path templatePath = Paths.get(this.getClass().getResource("/" + cumulative_flow_diagram_html).toURI());
+        List<String> lines = Files.readAllLines(templatePath, Charset.defaultCharset());
+        String statsData = computeStatsData();
+        try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(cumulative_flow_diagram_html)))) {
+            for (String line : lines) {
+                writer.append(line.replaceAll("\\$\\{DATA\\}", statsData) + "\n");
+            }
+        }
+    }
+
+    private String computeStatsData() {
+        String data = "";
+        data += "['Day', ";
+        for (int i = 0; i < listNames.size(); i++) {
+            String listName = listNames.get(i);
+            data += "'" + listName + "'";
+            if (i < listNames.size() - 1) {
+                data += ", ";
+            }
+        }
+        data += "],";
+        for (int i = 0; i < days.size(); i++) {
+            Day day = days.get(i);
+            data += "['" + DAY_MONTH_DATE_FORMAT.format(day.date()) + "', ";
+            for (int j = 0; j < listNames.size(); j++) {
+                String listName = listNames.get(j);
+                TrelloCardDeck cards = day.cardsInListNamed(listName);
+                data += cards.points();
+                if (j < listNames.size() - 1) {
+                    data += ", ";
+                }
+            }
+            data += "]";
+            if (i < days.size() - 1) {
+                data += ", \n";
+            }
+        }
+        return data;
+    }
+
     public static Builder builder() {
         return new Builder();
     }
@@ -55,7 +103,7 @@ public final class History {
     public static class Builder {
         private Date startDate;
         private Date endDate;
-        private List<String> listNames = new ArrayList<>();
+        private LinkedList<String> listNames = new LinkedList<>();
 
         public Builder from(String startDate) throws ParseException {
             this.startDate = YEAR_MONTH_DAY_DATE_FORMAT.parse(startDate);
@@ -68,7 +116,7 @@ public final class History {
         }
 
         public Builder withListNamed(String listName) {
-            this.listNames.add(listName);
+            this.listNames.push(listName);
             return this;
         }
 

@@ -48,10 +48,16 @@ public final class TrelloCharts {
 
     public static void main(String[] args) throws Exception {
         TrelloCharts charts = new TrelloCharts();
+
         charts.backlog().printStats();
+
         charts.sprint1().printStats();
+
         charts.sprint2().printStats();
-        charts.history().printStats();
+
+        charts.history()
+                .printStats()
+                .generateFlowDiagram();
     }
 
 }
