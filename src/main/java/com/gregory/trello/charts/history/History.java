@@ -61,7 +61,8 @@ public final class History {
         String statsData = computeStatsData();
         try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(cumulative_flow_diagram_html)))) {
             for (String line : lines) {
-                writer.append(line.replaceAll("\\$\\{DATA\\}", statsData) + "\n");
+                writer.append(line.replaceAll("\\$\\{DATA\\}", statsData));
+                writer.append("\n");
             }
         }
     }
@@ -69,15 +70,15 @@ public final class History {
     private String computeStatsData() {
         String data = "";
         data += "['Day', ";
-        for (int i = 0; i < listNames.size(); i++) {
+        for (int i = listNames.size() - 1; i >= 0; i--) {
             String listName = listNames.get(i);
             data += "'" + listName + "'";
-            if (i < listNames.size() - 1) {
+            if (i > 0) {
                 data += ", ";
             }
         }
         data += "],";
-        for (int i = 0; i < days.size(); i++) {
+        for (int i = days.size() - 1; i >= 0; i--) {
             Day day = days.get(i);
             data += "['" + DAY_MONTH_DATE_FORMAT.format(day.date()) + "', ";
             for (int j = 0; j < listNames.size(); j++) {
@@ -89,7 +90,7 @@ public final class History {
                 }
             }
             data += "]";
-            if (i < days.size() - 1) {
+            if (i > 0) {
                 data += ", \n";
             }
         }
@@ -103,7 +104,7 @@ public final class History {
     public static class Builder {
         private Date startDate;
         private Date endDate;
-        private LinkedList<String> listNames = new LinkedList<>();
+        private List<String> listNames = new ArrayList<>();
 
         public Builder from(String startDate) throws ParseException {
             this.startDate = YEAR_MONTH_DAY_DATE_FORMAT.parse(startDate);
@@ -116,7 +117,7 @@ public final class History {
         }
 
         public Builder withListNamed(String listName) {
-            this.listNames.push(listName);
+            this.listNames.add(listName);
             return this;
         }
 
