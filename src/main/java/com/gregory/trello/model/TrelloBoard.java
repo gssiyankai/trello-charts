@@ -26,6 +26,10 @@ public final class TrelloBoard {
         }
     }
 
+    public TrelloCardDeck cards() {
+        return new TrelloCardDeck(cards);
+    }
+
     public TrelloCardDeck cardsByLabelName(String labelName) {
         List<TrelloCard> result = new ArrayList<>();
         for (TrelloCard card : cards) {

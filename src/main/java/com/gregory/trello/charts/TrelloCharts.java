@@ -2,6 +2,7 @@ package com.gregory.trello.charts;
 
 import com.gregory.trello.charts.backlog.Backlog;
 import com.gregory.trello.charts.history.History;
+import com.gregory.trello.charts.release.DevelopmentLifecycle;
 import com.gregory.trello.charts.sprint.Sprint;
 
 import java.text.ParseException;
@@ -46,6 +47,14 @@ public final class TrelloCharts {
                 .createHistory();
     }
 
+    public DevelopmentLifecycle developmentLifecycle() throws ParseException {
+        return DevelopmentLifecycle.builder()
+                .startedAt("2016-02-08")
+                .withSprintStartingEveryNDays(14)
+                .withCompletedListNamed("Done")
+                .createDevelopmentLifecycle();
+    }
+
     public static void main(String[] args) throws Exception {
         TrelloCharts charts = new TrelloCharts();
 
@@ -63,6 +72,9 @@ public final class TrelloCharts {
         charts.history()
                 .printStats()
                 .generateCumulativeFlowDiagram();
+
+        charts.developmentLifecycle()
+                .printStats();
     }
 
 }
