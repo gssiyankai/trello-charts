@@ -13,11 +13,27 @@ ${DATA}
 
       var options = {
         title: 'Burndown chart\n\n${SPRINT_NAME}',
-        vAxis: {title: 'Points', titleTextStyle: {color: '#333'}, minValue: 0}
+        vAxis: {title: 'Points', titleTextStyle: {color: '#333'}, minValue: 0},
+        tooltip: {trigger: 'selection'},
+        aggregationTarget: 'auto'
       };
 
       var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
       chart.draw(data, options);
+
+      google.visualization.events.addListener(chart, 'onmouseover', function(e) {
+        var r = e.row;
+        var c = e.column;
+        var selection = [];
+        for(i=1; i<data.getNumberOfColumns(); i++) {
+          selection.push({row:r, column:i})
+        }
+        chart.setSelection(selection);
+      });
+
+      google.visualization.events.addListener(chart, 'onmouseout', function(e) {
+        chart.setSelection();
+      });
     }
     </script>
 </head>
