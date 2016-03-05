@@ -79,7 +79,7 @@ public final class History {
                 data += ", ";
             }
         }
-        data += "],";
+        data += "],\n";
         for (int i = days.size() - 1; i >= 0; i--) {
             HistoryDay day = days.get(i);
             data += "['" + DAY_MONTH_DATE_FORMAT.format(day.date()) + "', ";
