@@ -8,7 +8,7 @@ import java.util.*;
 import static com.gregory.trello.model.TrelloCardDeck.EMPTY_DECK;
 import static com.gregory.trello.utils.TrelloUtils.board;
 
-public final class HistoryDay {
+final class HistoryDay {
 
     private final Date date;
     private final Map<String, TrelloCardDeck> decks;
