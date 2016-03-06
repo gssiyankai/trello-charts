@@ -40,10 +40,10 @@ public final class TrelloCharts {
     public History history() throws ParseException {
         return History.builder()
                 .from("2016-02-08")
-                .withInProgressListNamed("In progress")
-                .withCompletedListNamed("Done")
                 .withListNamed("Backlog")
                 .withListNamed("To do")
+                .withInProgressListNamed("In progress")
+                .withCompletedListNamed("Done")
                 .createHistory();
     }
 
