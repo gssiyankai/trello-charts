@@ -58,4 +58,22 @@ public final class DateUtils {
         return calendar.getTime();
     }
 
+    public static int year(Date date) {
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(date);
+        return calendar.get(Calendar.YEAR);
+    }
+
+    public static int month(Date date) {
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(date);
+        return calendar.get(Calendar.MONTH);
+    }
+
+    public static int dayOfMonth(Date date) {
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(date);
+        return calendar.get(Calendar.DAY_OF_MONTH);
+    }
+
 }

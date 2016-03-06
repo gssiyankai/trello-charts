@@ -1,0 +1,35 @@
+<html>
+<head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+
+      var data = new google.visualization.DataTable();
+      data.addColumn('date', '');
+      data.addColumn('number', 'Days in progress');
+      data.addRows([
+${DATA}
+        ]);
+
+      var options = {
+        title: 'Cycle time chart\n',
+        vAxis: {title: 'Days in progress', titleTextStyle: {color: '#333'}, minValue: 0, ticks: [5,10,15,20,25,30]},
+        hAxis: {format: 'dd MMM' , gridlines: {count: data.getNumberOfRows()}},
+        animation: {duration: 1000, easing: 'inAndOut', startup: true},
+        legend: {position: 'none'},
+        pointShape: 'diamond'
+      };
+
+      var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
+      chart.draw(data, options);
+
+    }
+    </script>
+</head>
+<body>
+<div id="chart_div" style="width: 900px; height: 500px;"></div>
+</body>
+</html>

@@ -33,6 +33,16 @@ public final class History {
         }
     }
 
+    public List<HistoryCard> completedCards() {
+        List<HistoryCard> completedCards = new ArrayList<>();
+        for (HistoryCard card : cards) {
+            if(card.isComplete()) {
+                completedCards.add(card);
+            }
+        }
+        return completedCards;
+    }
+
     public History printStats() {
         System.out.println("*-*-*-*-*-*-*-*-*-* History stats *-*-*-*-*-*-*-*-*-*");
         System.out.println("Start date : " + YEAR_MONTH_DAY_DATE_FORMAT.format(startDate));
@@ -50,10 +60,8 @@ public final class History {
             }
         }
         System.out.println("Cycle time :");
-        for (HistoryCard card : cards) {
-            if (card.isComplete()) {
-                System.out.println("\t@" + YEAR_MONTH_DAY_DATE_FORMAT.format(card.completedAt()) + " - " + card.cycleTime() + " : " + card.title());
-            }
+        for (HistoryCard card : completedCards()) {
+            System.out.println("\t@" + YEAR_MONTH_DAY_DATE_FORMAT.format(card.completedAt()) + " - " + card.cycleTime() + " : " + card.title());
         }
         System.out.println("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
         return this;
@@ -64,11 +72,36 @@ public final class History {
         String template = readResourceLines(cumulativeFlowDiagramHtml);
         writeToFile(
                 cumulativeFlowDiagramHtml,
-                template.replace("${DATA}", computeStatsData()));
+                template.replace("${DATA}", computeHistoryStatsData()));
         return this;
     }
 
-    private String computeStatsData() {
+    public History generateCycleTimeChart() {
+        String cycleTimeChartHtml = "cycle_time_chart.html";
+        String template = readResourceLines(cycleTimeChartHtml);
+        writeToFile(
+                cycleTimeChartHtml,
+                template.replace("${DATA}", computeCycleTimeStatsData()));
+        return this;
+    }
+
+    private String computeCycleTimeStatsData() {
+        String data = "";
+        List<HistoryCard> completedCards = completedCards();
+        for (int i = completedCards.size() - 1; i >= 0; i--) {
+            HistoryCard card = completedCards.get(i);
+            Date date = card.completedAt();
+            data += "[" + String.format("new Date(%d,%d,%d)", year(date), month(date), dayOfMonth(date)) + ", "
+                  + card.cycleTime()
+                  + "]";
+            if (i > 0) {
+                data += ",\n";
+            }
+        }
+        return data;
+    }
+
+    private String computeHistoryStatsData() {
         String data = "";
         data += "['Day', ";
         for (int i = listNames.size() - 1; i >= 0; i--) {
