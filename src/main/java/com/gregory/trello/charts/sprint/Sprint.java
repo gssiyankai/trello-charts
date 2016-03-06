@@ -56,7 +56,7 @@ public final class Sprint {
     }
 
     private String computeStatsData() {
-        String data = "['Day', 'Actual burndown', 'Guideline'],\n";
+        String data = "";
         int sprintWorkingDays = workingDaysWithin(startDate, endDate).size();
         for (SprintDay day : days) {
             Date date = day.date();

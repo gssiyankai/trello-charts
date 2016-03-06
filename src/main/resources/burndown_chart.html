@@ -7,9 +7,13 @@
 
     function drawChart() {
 
-      var data = google.visualization.arrayToDataTable([
+      var data = new google.visualization.DataTable();
+      data.addColumn('string', 'Day');
+      data.addColumn('number', 'Actual burndown');
+      data.addColumn('number', 'Guideline');
+      data.addRows([
 ${DATA}
-        ]);
+      ]);
 
       var options = {
         title: 'Burndown chart\n\n${SPRINT_NAME}',
