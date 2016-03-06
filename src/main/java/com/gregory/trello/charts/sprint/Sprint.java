@@ -58,8 +58,7 @@ public final class Sprint {
     private String computeStatsData() {
         String data = "['Day', 'Actual burndown', 'Guideline'],\n";
         int sprintWorkingDays = workingDaysWithin(startDate, endDate).size();
-        for (int i = 0; i < days.size(); i++) {
-            SprintDay day = days.get(i);
+        for (SprintDay day : days) {
             Date date = day.date();
             int points = day.numberOfPoints();
             int remainingPoints = points - day.numberOfCompletedPoints();
@@ -70,10 +69,7 @@ public final class Sprint {
             data += "['" + DAY_MONTH_DATE_FORMAT.format(date) + "', "
                     + remainingPoints + ", "
                     + expectedRemainingPoints
-                    + "]";
-            if (i < days.size() - 1) {
-                data += ", \n";
-            }
+                    + "],";
         }
         return data;
     }

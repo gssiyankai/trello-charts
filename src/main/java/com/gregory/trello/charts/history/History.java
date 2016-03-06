@@ -93,10 +93,7 @@ public final class History {
             Date date = card.completedAt();
             data += "[" + String.format("new Date(%d,%d,%d)", year(date), month(date), dayOfMonth(date)) + ", "
                   + card.cycleTime()
-                  + "]";
-            if (i > 0) {
-                data += ",\n";
-            }
+                  + "],";
         }
         return data;
     }
@@ -112,8 +109,7 @@ public final class History {
             }
         }
         data += "],\n";
-        for (int i = 0; i < days.size(); i++) {
-            HistoryDay day = days.get(i);
+        for (HistoryDay day : days) {
             data += "['" + DAY_MONTH_DATE_FORMAT.format(day.date()) + "', ";
             for (int j = listNames.size() - 1; j >= 0; j--) {
                 String listName = listNames.get(j);
@@ -123,10 +119,7 @@ public final class History {
                     data += ", ";
                 }
             }
-            data += "]";
-            if (i < days.size() - 1) {
-                data += ",\n";
-            }
+            data += "],";
         }
         return data;
     }
