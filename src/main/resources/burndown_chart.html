@@ -14,6 +14,7 @@ ${DATA}
       var options = {
         title: 'Burndown chart\n\n${SPRINT_NAME}',
         vAxis: {title: 'Points', titleTextStyle: {color: '#333'}, minValue: 0},
+        animation: {duration: 1000, easing: 'inAndOut', startup: true},
         tooltip: {trigger: 'selection'},
         aggregationTarget: 'auto'
       };
