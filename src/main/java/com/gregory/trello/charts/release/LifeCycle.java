@@ -114,8 +114,7 @@ public final class LifeCycle {
                     + cycle.numberOfPoints() + ","
                     + cycle.numberOfCompletedPoints() + ","
                     + "true"
-                    + "]";
-            data += ",\n";
+                    + "],\n";
             completedPoints = cycle.numberOfCompletedPoints();
         }
         for (int i = 0; i < numberOfSprintsToComplete(); i++) {
@@ -124,8 +123,7 @@ public final class LifeCycle {
                     + numberOfPoints() + ","
                     + completedPoints + ","
                     + "false"
-                    + "]";
-            data += ",\n";
+                    + "],\n";
         }
         return data;
     }
