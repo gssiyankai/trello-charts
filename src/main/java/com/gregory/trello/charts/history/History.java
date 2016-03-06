@@ -15,16 +15,16 @@ import static com.gregory.trello.utils.FileUtils.writeToFile;
 public final class History {
 
     private final Date startDate;
-    private final Date endDate;
+    private final Date now;
     private final List<String> listNames;
     private final List<HistoryDay> days;
 
     private History(Date startDate, List<String> listNames) {
         this.startDate = startDate;
-        this.endDate = now();
+        this.now = now();
         this.listNames = listNames;
         this.days = new ArrayList<>();
-        for (Date date : daysBetweenDates(startDate, endDate)) {
+        for (Date date : daysBetweenDates(startDate, now)) {
             days.add(new HistoryDay(date));
         }
     }
@@ -32,7 +32,7 @@ public final class History {
     public History printStats() {
         System.out.println("*-*-*-*-*-*-*-*-*-* History stats *-*-*-*-*-*-*-*-*-*");
         System.out.println("Start date : " + YEAR_MONTH_DAY_DATE_FORMAT.format(startDate));
-        System.out.println("End date   : " + YEAR_MONTH_DAY_DATE_FORMAT.format(endDate));
+        System.out.println("End date   : " + YEAR_MONTH_DAY_DATE_FORMAT.format(now));
         for (HistoryDay day : days) {
             System.out.println("\t@" + YEAR_MONTH_DAY_DATE_FORMAT.format(day.date()));
             for (String listName : listNames) {
