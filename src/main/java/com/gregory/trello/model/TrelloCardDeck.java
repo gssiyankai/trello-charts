@@ -31,4 +31,7 @@ public final class TrelloCardDeck implements Iterable<TrelloCard> {
         return cards.size();
     }
 
+    public boolean contains(TrelloCard card) {
+        return cards.contains(card);
+    }
 }

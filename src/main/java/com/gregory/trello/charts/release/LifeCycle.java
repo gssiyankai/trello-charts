@@ -16,29 +16,27 @@ import static com.gregory.trello.utils.TrelloUtils.board;
 public final class LifeCycle {
 
     private final Date startDate;
-    private final Date now;
     private final int sprintDurationInDays;
     private final String completedListName;
     private final List<Cycle> cycles;
 
     private LifeCycle(Date startDate, int sprintDurationInDays, String completedListName) {
         this.startDate = startDate;
-        this.now = now();
         this.sprintDurationInDays = sprintDurationInDays;
         this.completedListName = completedListName;
         this.cycles = new ArrayList<>();
         Date current = startDate;
-        while(current.compareTo(now)<=0) {
+        while (current.compareTo(NOW) <= 0) {
             cycles.add(new Cycle(current, completedListName));
             current = addDays(current, sprintDurationInDays);
         }
-        if(current.compareTo(now) > 0) {
-            cycles.add(new Cycle(now, completedListName));
+        if (current.compareTo(NOW) > 0) {
+            cycles.add(new Cycle(NOW, completedListName));
         }
     }
 
     public double numberOfPassedSprints() {
-        return daysBetweenDates(startDate, now).size() * 1. / sprintDurationInDays;
+        return numberOfDaysBetweenDates(startDate, NOW) * 1. / sprintDurationInDays;
     }
 
     public TrelloCardDeck completedCards() {
@@ -118,7 +116,7 @@ public final class LifeCycle {
         }
         for (int i = 0; i < numberOfSprintsToComplete(); i++) {
             completedPoints += velocity();
-            data += "['" + DAY_MONTH_YEAR_DATE_FORMAT.format(addDays(now, sprintDurationInDays*i)) + "',"
+            data += "['" + DAY_MONTH_YEAR_DATE_FORMAT.format(addDays(NOW, sprintDurationInDays * i)) + "',"
                     + numberOfPoints() + ","
                     + completedPoints + ","
                     + "false"

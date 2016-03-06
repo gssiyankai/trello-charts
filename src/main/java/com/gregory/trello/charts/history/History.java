@@ -11,28 +11,32 @@ import java.util.List;
 import static com.gregory.trello.utils.DateUtils.*;
 import static com.gregory.trello.utils.FileUtils.readResourceLines;
 import static com.gregory.trello.utils.FileUtils.writeToFile;
+import static com.gregory.trello.utils.TrelloUtils.board;
 
 public final class History {
 
     private final Date startDate;
-    private final Date now;
     private final List<String> listNames;
     private final List<HistoryDay> days;
+    private final List<HistoryCard> cards;
 
-    private History(Date startDate, List<String> listNames) {
+    private History(Date startDate, String inProgressListName, String completedListName, List<String> listNames) {
         this.startDate = startDate;
-        this.now = now();
         this.listNames = listNames;
         this.days = new ArrayList<>();
-        for (Date date : daysBetweenDates(startDate, now)) {
-            days.add(new HistoryDay(date));
+        for (Date date : daysBetweenDates(startDate, NOW)) {
+            this.days.add(new HistoryDay(date));
+        }
+        this.cards = new ArrayList<>();
+        for (TrelloCard card : board().cardsAt(NOW)) {
+            this.cards.add(new HistoryCard(card, inProgressListName, completedListName));
         }
     }
 
     public History printStats() {
         System.out.println("*-*-*-*-*-*-*-*-*-* History stats *-*-*-*-*-*-*-*-*-*");
         System.out.println("Start date : " + YEAR_MONTH_DAY_DATE_FORMAT.format(startDate));
-        System.out.println("End date   : " + YEAR_MONTH_DAY_DATE_FORMAT.format(now));
+        System.out.println("End date   : " + YEAR_MONTH_DAY_DATE_FORMAT.format(NOW));
         for (HistoryDay day : days) {
             System.out.println("\t@" + YEAR_MONTH_DAY_DATE_FORMAT.format(day.date()));
             for (String listName : listNames) {
@@ -43,6 +47,12 @@ public final class History {
                     System.out.println("\t\t\t\t" + card.title() + " " + card.url());
                 }
                 System.out.println("\t\t\tNumber of points : " + cards.points());
+            }
+        }
+        System.out.println("Cycle time :");
+        for (HistoryCard card : cards) {
+            if (card.isComplete()) {
+                System.out.println("\t@" + YEAR_MONTH_DAY_DATE_FORMAT.format(card.completedAt()) + " - " + card.cycleTime() + " : " + card.title());
             }
         }
         System.out.println("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
@@ -94,11 +104,23 @@ public final class History {
 
     public static class Builder {
         private Date startDate;
+        private String completedListName;
+        private String inProgressListName;
         private List<String> listNames = new ArrayList<>();
 
         public Builder from(String startDate) throws ParseException {
             this.startDate = YEAR_MONTH_DAY_DATE_FORMAT.parse(startDate);
             return this;
+        }
+
+        public Builder withInProgressListNamed(String inProgressListName) {
+            this.inProgressListName = inProgressListName;
+            return withListNamed(inProgressListName);
+        }
+
+        public Builder withCompletedListNamed(String completedListName) {
+            this.completedListName = completedListName;
+            return withListNamed(completedListName);
         }
 
         public Builder withListNamed(String listName) {
@@ -107,7 +129,7 @@ public final class History {
         }
 
         public History createHistory() {
-            return new History(startDate, listNames);
+            return new History(startDate, inProgressListName, completedListName, listNames);
         }
     }
 

@@ -12,10 +12,6 @@ public final class TrelloAction {
         this.action = action;
     }
 
-    public boolean isDoneWithin(Date start, Date end) {
-        return isDoneAfter(start) && isDoneBefore(end);
-    }
-
     public boolean isDoneAfter(Date date) {
         return action.getDate().compareTo(date) >= 0;
     }
@@ -32,11 +28,19 @@ public final class TrelloAction {
         return isMove() && toList.equals(action.getData().getListAfter().getName());
     }
 
+    public boolean isMoveFromList(String toList) {
+        return isMove() && toList.equals(action.getData().getListBefore().getName());
+    }
+
     public String afterListId() {
         return action.getData().getListAfter().getId();
     }
 
     public String beforeListId() {
         return action.getData().getListBefore().getId();
+    }
+
+    public Date date() {
+        return action.getDate();
     }
 }

@@ -11,12 +11,9 @@ public final class DateUtils {
     public static final SimpleDateFormat YEAR_MONTH_DAY_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
     public static final SimpleDateFormat DAY_MONTH_DATE_FORMAT = new SimpleDateFormat("dd MMM");
     public static final SimpleDateFormat DAY_MONTH_YEAR_DATE_FORMAT = new SimpleDateFormat("dd MMM yyyy");
+    public static final Date NOW = new Date();
 
     private DateUtils() {
-    }
-
-    public static Date now() {
-        return new Date();
     }
 
     public static List<Date> daysBetweenDates(Date start, Date end) {
@@ -29,6 +26,10 @@ public final class DateUtils {
             calendar.add(Calendar.DATE, 1);
         }
         return dates;
+    }
+
+    public static int numberOfDaysBetweenDates(Date start, Date end) {
+        return daysBetweenDates(start, end).size();
     }
 
     public static List<Date> workingDaysWithin(Date start, Date end) {

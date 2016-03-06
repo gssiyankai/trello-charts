@@ -27,9 +27,19 @@ public final class TrelloCard {
         }
     }
 
-    public TrelloAction lastMoveActionBefore(Date date) {
+    public List<TrelloAction> moveActions() {
+        List<TrelloAction> moveActions = new ArrayList<>();
         for (TrelloAction action : actions) {
-            if (action.isMove() && action.isDoneBefore(date)) {
+            if (action.isMove()) {
+                moveActions.add(action);
+            }
+        }
+        return moveActions;
+    }
+
+    public TrelloAction lastMoveActionBefore(Date date) {
+        for (TrelloAction action : moveActions()) {
+            if (action.isDoneBefore(date)) {
                 return action;
             }
         }
@@ -37,9 +47,10 @@ public final class TrelloCard {
     }
 
     public TrelloAction firstMoveActionAfter(Date date) {
-        for (int i = actions.size() - 1; i >= 0; i--) {
-            TrelloAction action = actions.get(i);
-            if (action.isMove() && action.isDoneAfter(date)) {
+        List<TrelloAction> moveActions = moveActions();
+        for (int i = moveActions.size() - 1; i >= 0; i--) {
+            TrelloAction action = moveActions.get(i);
+            if (action.isDoneAfter(date)) {
                 return action;
             }
         }
