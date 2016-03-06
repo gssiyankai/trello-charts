@@ -69,7 +69,7 @@ public final class Sprint {
             data += "['" + DAY_MONTH_DATE_FORMAT.format(date) + "', "
                     + remainingPoints + ", "
                     + expectedRemainingPoints
-                    + "],";
+                    + "],\n";
         }
         return data;
     }

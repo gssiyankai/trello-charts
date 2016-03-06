@@ -93,7 +93,7 @@ public final class History {
             Date date = card.completedAt();
             data += "[" + String.format("new Date(%d,%d,%d)", year(date), month(date), dayOfMonth(date)) + ", "
                   + card.cycleTime()
-                  + "],";
+                  + "],\n";
         }
         return data;
     }
@@ -119,7 +119,7 @@ public final class History {
                     data += ", ";
                 }
             }
-            data += "],";
+            data += "],\n";
         }
         return data;
     }
