@@ -34,7 +34,7 @@ ${DATA}
         var r = e.row;
         var c = e.column;
         var selection = [];
-        for(i=1; i<data.getNumberOfColumns(); i++) {
+        for(i=1; i<data.getNumberOfColumns()-1; i++) {
           selection.push({row:r, column:i})
         }
         chart.setSelection(selection);
