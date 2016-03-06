@@ -98,7 +98,11 @@ public final class LifeCycle {
         String template = readResourceLines(burnupChartHtml);
         writeToFile(
                 burnupChartHtml,
-                template.replace("${DATA}", computeStatsData()));
+                template.replace("${DATA}", computeStatsData())
+                        .replace("${BACKLOG_POINTS}", "" + numberOfPoints())
+                        .replace("${VELOCITY}", "" + velocity())
+                        .replace("${SPRINTS_TO_COMPLETE}", "" + numberOfSprintsToComplete())
+                        .replace("${ESTIMATED_CARDS_PERCENTAGE}", "" + percentageOfEstimatedCards()));
         return this;
     }
 

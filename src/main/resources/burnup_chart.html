@@ -1,4 +1,7 @@
 <html>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <head>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
@@ -11,7 +14,7 @@
       data.addColumn('string', 'Day');
       data.addColumn('number', 'Total');
       data.addColumn('number', 'Completed');
-      data.addColumn({type:'boolean',role:'certainty'}); // certainty col.
+      data.addColumn({type:'boolean',role:'certainty'});
       data.addRows([
 ${DATA}
         ]);
@@ -45,5 +48,13 @@ ${DATA}
 </head>
 <body>
 <div id="chart_div" style="width: 900px; height: 500px;"></div>
+<div id="info_div" style="width: 900px; margin-left: 150px;">
+    <h4>
+        <span class="label label-default">Backlog points <span class="label label-info label-as-badge">${BACKLOG_POINTS}</span></span>
+        <span class="label label-default">Velocity <span class="label label-warning label-as-badge">${VELOCITY}</span></span>
+        <span class="label label-default">Sprints to complete <span class="label label-danger label-as-badge">${SPRINTS_TO_COMPLETE}</span></span>
+        <span class="label label-default">Cards estimated <span class="label label-success label-as-badge">${ESTIMATED_CARDS_PERCENTAGE} %</span></span>
+    </h4>
+</div>
 </body>
 </html>
