@@ -8,9 +8,9 @@ import static java.util.Calendar.MONDAY;
 
 public final class DateUtils {
 
-    public static final SimpleDateFormat YEAR_MONTH_DAY_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
-    public static final SimpleDateFormat DAY_MONTH_DATE_FORMAT = new SimpleDateFormat("dd MMM");
-    public static final SimpleDateFormat DAY_MONTH_YEAR_DATE_FORMAT = new SimpleDateFormat("dd MMM yyyy");
+    public static final SimpleDateFormat YEAR_MONTH_DAY_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+    public static final SimpleDateFormat DAY_MONTH_DATE_FORMAT = new SimpleDateFormat("dd MMM", Locale.US);
+    public static final SimpleDateFormat DAY_MONTH_YEAR_DATE_FORMAT = new SimpleDateFormat("dd MMM yyyy", Locale.US);
     public static final Date NOW = new Date();
 
     private DateUtils() {
