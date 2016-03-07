@@ -47,8 +47,16 @@ public final class DateUtils {
         return dates;
     }
 
+    public static int numberOfWorkingDaysWithin(Date start, Date end) {
+        return workingDaysWithin(start, end).size();
+    }
+
     public static Date dayAfter(Date date) {
         return addDays(date, 1);
+    }
+
+    public static Date dayBefore(Date date) {
+        return addDays(date, -1);
     }
 
     public static Date addDays(Date date, int n) {

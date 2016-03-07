@@ -57,13 +57,13 @@ public final class Sprint {
 
     private String computeStatsData() {
         String data = "";
-        int sprintWorkingDays = workingDaysWithin(startDate, endDate).size();
+        int sprintWorkingDays = numberOfWorkingDaysWithin(startDate, endDate);
         for (SprintDay day : days) {
             Date date = day.date();
             int points = day.numberOfPoints();
             int remainingPoints = points - day.numberOfCompletedPoints();
 
-            int numberOfPassedWorkingDays = workingDaysWithin(startDate, date).size() - 1;
+            int numberOfPassedWorkingDays = numberOfWorkingDaysWithin(startDate, dayBefore(date));
             int expectedRemainingPoints = (int) (points * (sprintWorkingDays - numberOfPassedWorkingDays) * 1. / sprintWorkingDays);
 
             data += "['" + DAY_MONTH_DATE_FORMAT.format(date) + "', "
