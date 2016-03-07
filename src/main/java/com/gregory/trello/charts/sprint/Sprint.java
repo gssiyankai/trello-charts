@@ -67,7 +67,7 @@ public final class Sprint {
             int expectedRemainingPoints = (int) (points * (sprintWorkingDays - numberOfPassedWorkingDays) * 1. / sprintWorkingDays);
 
             data += "['" + DAY_MONTH_DATE_FORMAT.format(date) + "', "
-                    + remainingPoints + ", "
+                    + (date.before(NOW) ? remainingPoints : "") + ", "
                     + expectedRemainingPoints
                     + "],\n";
         }
