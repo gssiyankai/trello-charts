@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static com.gregory.trello.utils.DateUtils.dayAfter;
 import static com.gregory.trello.utils.TrelloUtils.board;
 
 final class Cycle {
@@ -28,7 +27,7 @@ final class Cycle {
     TrelloCardDeck completedCards() {
         List<TrelloCard> cards = new ArrayList<>();
         for (TrelloCard card : cards()) {
-            TrelloAction action = card.lastMoveActionBefore(dayAfter(endDate));
+            TrelloAction action = card.lastMoveActionBefore(endDate);
             if (action != null && action.isMoveToList(completedListName)) {
                 cards.add(card);
             }
@@ -41,7 +40,7 @@ final class Cycle {
     }
 
     TrelloCardDeck cards() {
-        return board().cardsAt(dayAfter(endDate));
+        return board().cardsAt(endDate);
     }
 
     int numberOfPoints() {

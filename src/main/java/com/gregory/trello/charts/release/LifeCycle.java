@@ -30,29 +30,23 @@ public final class LifeCycle {
             cycles.add(new Cycle(current, completedListName));
             current = addDays(current, sprintDurationInDays);
         }
-        if (current.compareTo(NOW) > 0) {
-            cycles.add(new Cycle(NOW, completedListName));
-        }
     }
 
-    public double numberOfPassedSprints() {
-        return numberOfDaysBetweenDates(startDate, NOW) * 1. / sprintDurationInDays;
-    }
-
-    public TrelloCardDeck completedCards() {
-        return board().cardsByListName(completedListName);
+    public int numberOfPassedSprints() {
+        return cycles.size() - 1;
     }
 
     public int numberOfCompletedPoints() {
-        return completedCards().points();
+        Cycle lastCycle = cycles.get(numberOfPassedSprints());
+        return lastCycle.numberOfCompletedPoints();
     }
 
     public int velocity() {
-        return (int) (numberOfCompletedPoints() / numberOfPassedSprints());
+        return (int) (Math.floor(numberOfCompletedPoints() *1.0 / numberOfPassedSprints()));
     }
 
     public int numberOfSprintsToComplete() {
-        return (int) (Math.ceil(numberOfPoints() - numberOfCompletedPoints()) / velocity());
+        return (int) (Math.ceil((numberOfPoints() - numberOfCompletedPoints()) * 1. / velocity()));
     }
 
     public int numberOfCards() {
@@ -117,7 +111,7 @@ public final class LifeCycle {
                     + "],\n";
             completedPoints = cycle.numberOfCompletedPoints();
         }
-        for (int i = 0; i < numberOfSprintsToComplete(); i++) {
+        for (int i = 1; i < numberOfSprintsToComplete(); i++) {
             completedPoints += velocity();
             data += "['" + DAY_MONTH_YEAR_DATE_FORMAT.format(addDays(NOW, sprintDurationInDays * i)) + "',"
                     + numberOfPoints() + ","
