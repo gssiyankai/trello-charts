@@ -63,11 +63,11 @@ public final class Sprint {
             int points = day.numberOfPoints();
             int remainingPoints = points - day.numberOfCompletedPoints();
 
-            int numberOfPassedWorkingDays = workingDaysWithin(startDate, date).size();
+            int numberOfPassedWorkingDays = workingDaysWithin(startDate, date).size() - 1;
             int expectedRemainingPoints = (int) (points * (sprintWorkingDays - numberOfPassedWorkingDays) * 1. / sprintWorkingDays);
 
             data += "['" + DAY_MONTH_DATE_FORMAT.format(date) + "', "
-                    + (date.before(NOW) ? remainingPoints : "") + ", "
+                    + (date.before(dayAfter(NOW)) ? remainingPoints : "") + ", "
                     + expectedRemainingPoints
                     + "],\n";
         }

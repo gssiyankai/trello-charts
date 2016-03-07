@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static com.gregory.trello.utils.DateUtils.dayAfter;
-
 final class SprintDay {
 
     private final Date date;
@@ -33,7 +31,7 @@ final class SprintDay {
     TrelloCardDeck cards() {
         List<TrelloCard> cards = new ArrayList<>();
         for (TrelloCard card : sprintCards) {
-            if (card.isCreatedBefore(dayAfter(date))) {
+            if (card.isCreatedBefore(date)) {
                 cards.add(card);
             }
         }
@@ -75,7 +73,7 @@ final class SprintDay {
     private TrelloCardDeck cardsInListNamed(String listName) {
         List<TrelloCard> cards = new ArrayList<>();
         for (TrelloCard card : cards()) {
-            TrelloAction action = card.lastMoveActionBefore(dayAfter(date));
+            TrelloAction action = card.lastMoveActionBefore(date);
             if (action != null && action.isMoveToList(listName)) {
                 cards.add(card);
             }
