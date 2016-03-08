@@ -90,19 +90,15 @@ public final class TrelloCard {
     }
 
     public String listIdAt(Date date) {
-        if (actions.isEmpty()) {
-            return card.getIdList();
-        } else {
-            TrelloAction action = lastMoveActionBefore(date);
-            if (action != null) {
-                return action.afterListId();
-            }
-            action = firstMoveActionAfter(date);
-            if (action != null) {
-                return action.beforeListId();
-            }
-            throw new UnsupportedOperationException();
+        TrelloAction action = lastMoveActionBefore(date);
+        if (action != null) {
+            return action.afterListId();
         }
+        action = firstMoveActionAfter(date);
+        if (action != null) {
+            return action.beforeListId();
+        }
+        return card.getIdList();
     }
 
     public String title() {
