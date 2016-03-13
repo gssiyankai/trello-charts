@@ -30,6 +30,7 @@ public final class LifeCycle {
             cycles.add(new Cycle(current, completedListName));
             current = addDays(current, sprintDurationInDays);
         }
+        cycles.add(new Cycle(current, completedListName));
     }
 
     public int numberOfPassedSprints() {
