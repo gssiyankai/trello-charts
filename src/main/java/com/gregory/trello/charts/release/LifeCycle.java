@@ -43,7 +43,7 @@ public final class LifeCycle {
     }
 
     public int velocity() {
-        return (int) (Math.floor(numberOfCompletedPoints() *1.0 / numberOfPassedSprints()));
+        return (int) (Math.floor(numberOfCompletedPoints() * 1.0 / numberOfPassedSprints()));
     }
 
     public int numberOfSprintsToComplete() {
@@ -117,6 +117,13 @@ public final class LifeCycle {
             data += "['" + DAY_MONTH_YEAR_DATE_FORMAT.format(addDays(NOW, sprintDurationInDays * i)) + "',"
                     + numberOfPoints() + ","
                     + completedPoints + ","
+                    + "false"
+                    + "],\n";
+        }
+        if (completedPoints < numberOfPoints()) {
+            data += "['" + DAY_MONTH_YEAR_DATE_FORMAT.format(addDays(NOW, sprintDurationInDays * numberOfSprintsToComplete())) + "',"
+                    + numberOfPoints() + ","
+                    + numberOfPoints() + ","
                     + "false"
                     + "],\n";
         }
