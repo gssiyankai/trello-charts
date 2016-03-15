@@ -104,7 +104,9 @@ public final class LifeCycle {
     private String computeStatsData() {
         int completedPoints = 0;
         String data = "";
-        for (Cycle cycle : cycles) {
+        Cycle cycle = null;
+        for (int i = 0; i < cycles.size(); i++) {
+            cycle = cycles.get(i);
             data += "['" + DAY_MONTH_YEAR_DATE_FORMAT.format(cycle.endDate()) + "',"
                     + cycle.numberOfPoints() + ","
                     + cycle.numberOfCompletedPoints() + ","
@@ -114,14 +116,14 @@ public final class LifeCycle {
         }
         for (int i = 1; i < numberOfSprintsToComplete(); i++) {
             completedPoints += velocity();
-            data += "['" + DAY_MONTH_YEAR_DATE_FORMAT.format(addDays(NOW, sprintDurationInDays * i)) + "',"
+            data += "['" + DAY_MONTH_YEAR_DATE_FORMAT.format(addDays(cycle.endDate(), sprintDurationInDays * i)) + "',"
                     + numberOfPoints() + ","
                     + completedPoints + ","
                     + "false"
                     + "],\n";
         }
         if (completedPoints < numberOfPoints()) {
-            data += "['" + DAY_MONTH_YEAR_DATE_FORMAT.format(addDays(NOW, sprintDurationInDays * numberOfSprintsToComplete())) + "',"
+            data += "['" + DAY_MONTH_YEAR_DATE_FORMAT.format(addDays(cycle.endDate(), sprintDurationInDays * numberOfSprintsToComplete())) + "',"
                     + numberOfPoints() + ","
                     + numberOfPoints() + ","
                     + "false"
