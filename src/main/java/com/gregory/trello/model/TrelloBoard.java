@@ -12,7 +12,7 @@ public final class TrelloBoard {
 
     private final Board board;
     private final List<TrelloList> lists;
-    private final List<TrelloCard> cards;
+    private final TrelloCardDeck cards;
 
     public TrelloBoard(Board board, List<TList> lists, List<Card> cards) {
         this.board = board;
@@ -20,40 +20,22 @@ public final class TrelloBoard {
         for (TList list : lists) {
             this.lists.add(new TrelloList(list));
         }
-        this.cards = new ArrayList<>();
+        this.cards = new TrelloCardDeck();
         for (Card card : cards) {
-            this.cards.add(new TrelloCard(card));
+            this.cards.addCard(new TrelloCard(card));
         }
     }
 
     public TrelloCardDeck cards() {
-        return new TrelloCardDeck(cards);
+        return cards;
     }
 
     public TrelloCardDeck cardsByLabelName(String labelName) {
-        List<TrelloCard> result = new ArrayList<>();
-        for (TrelloCard card : cards) {
-            for (TrelloLabel label : card.labels()) {
-                if (labelName.equals(label.name())) {
-                    result.add(card);
-                }
-            }
-        }
-        return new TrelloCardDeck(result);
+        return cards.cardsByLabelName(labelName);
     }
 
     public TrelloCardDeck cardsByListName(String listName) {
-        List<TrelloCard> result = new ArrayList<>();
-        for (TrelloCard card : cards) {
-            String listId = card.listId();
-            for (TrelloList list : listsByName(listName)) {
-                if (list.id().equals(listId)) {
-                    result.add(card);
-                    break;
-                }
-            }
-        }
-        return new TrelloCardDeck(result);
+        return cards.cardsByListName(listName);
     }
 
     public List<TrelloList> listsByName(String listName) {
