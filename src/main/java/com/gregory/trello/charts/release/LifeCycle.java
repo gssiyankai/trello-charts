@@ -97,7 +97,7 @@ public final class LifeCycle {
                         .replace("${BACKLOG_POINTS}", "" + numberOfPoints())
                         .replace("${VELOCITY}", "" + velocity())
                         .replace("${SPRINTS_TO_COMPLETE}", "" + numberOfSprintsToComplete())
-                        .replace("${ESTIMATED_CARDS_PERCENTAGE}", "" + percentageOfEstimatedCards()));
+                        .replace("${ESTIMATED_CARDS_PERCENTAGE}", String.format("%.2f", percentageOfEstimatedCards())));
         return this;
     }
 
