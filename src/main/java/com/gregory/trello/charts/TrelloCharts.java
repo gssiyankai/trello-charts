@@ -59,6 +59,17 @@ public final class TrelloCharts {
                 .createSprint();
     }
 
+    public Sprint sprint5() throws ParseException {
+        return Sprint.builder()
+                .of("Sprint 5")
+                .from("2016-04-04")
+                .to("2016-04-17")
+                .withSprintBacklogListNamed("To do")
+                .withInProgressListNamed("In progress")
+                .withCompletedListNamed("Done")
+                .createSprint();
+    }
+
     public History history() throws ParseException {
         return History.builder()
                 .from("2016-02-08")
@@ -96,6 +107,10 @@ public final class TrelloCharts {
                 .generateBurndownChart();
 
         charts.sprint4()
+                .printStats()
+                .generateBurndownChart();
+
+        charts.sprint5()
                 .printStats()
                 .generateBurndownChart();
 
